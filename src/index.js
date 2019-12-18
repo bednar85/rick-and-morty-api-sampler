@@ -10,18 +10,19 @@ function setState(newState) {
   };
 }
 
-function loadData(url) {
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const { info, results } = data;
+function loadCharacterData() {
+  Promise.all([
+    fetch("https://rickandmortyapi.com/api/character/?page=1"),
+    fetch("https://rickandmortyapi.com/api/character/?page=2"),
+    fetch("https://rickandmortyapi.com/api/character/?page=3")
+  ]).then(responses => Promise.all(responses.map(response => response.json()))
+  ).then(data => {
+    // combine all of the results into one array
+    const combinedResults = data.flatMap(datum => datum.results);
 
-      setState({ info, results });
-      renderResults(data.results);
-    })
-    .catch(error => {
-      console.log("Error: ", error);
-    });
+    setState({ results: combinedResults });
+    renderResults(combinedResults);
+  });  
 }
 
 function renderResults(results) {
@@ -43,9 +44,8 @@ function renderResults(results) {
     .join("");
 }
 
-const paginationElement = document.querySelector('.pagination-controls');
+const paginationControlsElement = document.querySelector('.pagination-controls');
 
-paginationElement.addEventListener(
   "click",
   (event) => {
     if (
@@ -67,4 +67,4 @@ paginationElement.addEventListener(
   false
 );
 
-loadData("https://rickandmortyapi.com/api/character/");
+loadCharacterData();
