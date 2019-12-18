@@ -44,25 +44,30 @@ function renderResults(results) {
     .join("");
 }
 
-const paginationControlsElement = document.querySelector('.pagination-controls');
+// const paginationControlsElement = document.querySelector('.pagination-controls');
 
-  "click",
-  (event) => {
-    if (
-      event.target.matches(".pagination-controls-btn--prev") &&
-      state.info.prev
-    ) {
-      loadData(state.info.prev);
-    }
+// paginationControlsElement.addEventListener(
+//   "click",
+//   (event) => {
+//     if (
+//       event.target.matches(".pagination-controls-btn--prev") &&
+//       state.info.prev
+//     ) {
+//       loadData(state.info.prev);
+//     }
 
-    if (
-      event.target.matches(".pagination-controls-btn--next") &&
-      state.info.next
-    ) {
-      loadData(state.info.next);
-    }
+//     if (
+//       event.target.matches(".pagination-controls-btn--next") &&
+//       state.info.next
+//     ) {
+//       loadData(state.info.next);
+//     }
 
-    console.log("state:", state);
+//     console.log("state:", state);
+//   },
+//   false
+// );
+
   },
   false
 );
