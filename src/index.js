@@ -24,8 +24,6 @@ function loadData(url) {
     });
 }
 
-
-
 function renderResults(results) {
   document.getElementById("results").innerHTML = results
     .map(
@@ -44,9 +42,6 @@ function renderResults(results) {
     )
     .join("");
 }
-
-loadData("https://rickandmortyapi.com/api/character/");
-
 
 const paginationElement = document.querySelector('.pagination-controls');
 
@@ -71,3 +66,5 @@ paginationElement.addEventListener(
   },
   false
 );
+
+loadData("https://rickandmortyapi.com/api/character/");
