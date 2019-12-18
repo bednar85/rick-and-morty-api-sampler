@@ -1,6 +1,9 @@
 import "./styles.css";
 
-let state = {};
+let state = {
+  filters: {},
+  results: []
+};
 
 // merge the current state with the new state
 function setState(newState) {
@@ -68,8 +71,32 @@ function renderResults(results) {
 //   false
 // );
 
+const filterControlsElement = document.querySelector('.filter-controls');
+
+filterControlsElement.addEventListener(
+  "change",
+  function(event) {
+    console.log('');
+    console.log('change');
+    console.log('event.target:', event.target);
   },
   false
 );
+
+// on keydown
+
+filterControlsElement.addEventListener(
+  "keydown",
+  function(event) {
+    console.log('');
+    console.log('keydown');
+    console.log('event:', event);
+    console.log('event.target:', event.target);
+    console.log('event.target.value:', event.target.value);
+  },
+  false
+);
+
+
 
 loadCharacterData();
