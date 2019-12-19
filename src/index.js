@@ -62,7 +62,7 @@ function loadCharacterData() {
   ).then(data => {
     // combine all of the results into one array
     const combinedResults = data.flatMap(datum => datum.results);
-
+    
     // set allResults in the initial state as a source of truth
     initialState.allResults = combinedResults;
 
@@ -132,7 +132,7 @@ function getFilteredResults(filters, results) {
 // probably change this so it sets it in the state rather than "getting it each time"
 function getPaginatedResults(results) { return chunk(results, 10) };
 
-// Generated Elements
+// DOM Manipulation
 function renderResults(results) {
   // it would be easiest if right here is where we did the chunking and determined which page sub array to use
   const { currentPage } = state;
@@ -179,11 +179,6 @@ function handleFilterChange(event) {
   
   const filteredResults = getFilteredResults(filters, allResults);
 
-  // if filteredResults.length !== results
-  // reset current page
-
-  console.log('  filteredResults:', filteredResults);
-
   setResults(filteredResults);
   renderResults(filteredResults);
 }
@@ -197,8 +192,7 @@ filterControlsElement.addEventListener(
     if (event.target.matches('.filter-controls-select-input')) {
       handleFilterChange(event);
     }
-  },
-  false
+  }
 );
 
 // prevent form submittal via the Enter key, it's clearing the text input
@@ -209,8 +203,7 @@ filterControlsElement.addEventListener(
       event.preventDefault();
       return false;
     }
-  },
-  false
+  }
 );
 
 filterControlsElement.addEventListener(
@@ -219,8 +212,7 @@ filterControlsElement.addEventListener(
     if (event.target.matches('.filter-controls-text-input')) {
       handleFilterChange(event);
     }
-  },
-  false
+  }
 );
 
 const paginationControlsElement = document.querySelector('.pagination-controls');
