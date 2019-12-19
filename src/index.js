@@ -1,6 +1,6 @@
 import './styles.css';
 
-import { chunk } from './utils.js';
+import { chunk, compare, sort, sortByArrayLength } from './utils.js';
 
 const itemsPerPage = 10;
 
@@ -109,8 +109,10 @@ function loadLocationData() {
     
     // set allLocations in the initial state as a source of truth
     completeData.allLocations = allLocations;
+    
+    const sortedLocations = sortByArrayLength(allLocations, 'descending', 'residents');
 
-    setLocations(allLocations);
+    setLocations(sortedLocations);
   });  
 }
 
@@ -126,7 +128,9 @@ function loadEpisodeData() {
     // set allEpisodes in the initial state as a source of truth
     completeData.allEpisodes = allEpisodes;
 
-    setEpisodes(allEpisodes);
+    const sortedEpisodes = sortByArrayLength(allEpisodes, 'descending', 'characters');
+    
+    setEpisodes(sortedEpisodes);
   });  
 }
 
