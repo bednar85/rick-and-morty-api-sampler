@@ -1,6 +1,6 @@
 import './styles.css';
 
-let state = {
+const initialState = {
   filters: {
     name: '',
     status: '',
@@ -9,6 +9,8 @@ let state = {
   results: [],
   allResults: []
 };
+
+let state = { ...initialState };
 
 function setFilters(name, value) {
   state = {
@@ -37,8 +39,8 @@ function loadCharacterData() {
     // combine all of the results into one array
     const combinedResults = data.flatMap(datum => datum.results);
 
-    // set allResults as a source of truth
-    state.allResults = combinedResults;
+    // set allResults in the initial state as a source of truth
+    initialState.allResults = combinedResults;
 
     setResults(combinedResults);
     renderResults(combinedResults);
@@ -56,7 +58,7 @@ function getFilteredResults(filters, results) {
   console.log('  noFiltersSet:', noFiltersSet);
 
   if (noFiltersSet) {
-    return state.allResults;
+    return initialState.allResults;
   }
 
   // convert filter object to an array of entries
@@ -150,9 +152,13 @@ function handleFilterChange(event) {
 
   setFilters(name, value);
 
-  const { filters, allResults } = state;
-
+  const { allResults } = initialState;
+  const { filters, results } = state;
+  
   const filteredResults = getFilteredResults(filters, allResults);
+
+  // if filteredResults.length !== results
+  // reset current page
 
   setResults(filteredResults);
 
