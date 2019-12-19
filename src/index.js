@@ -2,6 +2,8 @@ import './styles.css';
 
 import { chunk } from './utils.js';
 
+const itemsPerPage = 10;
+
 const initialState = {
   filters: {
     name: '',
@@ -131,8 +133,11 @@ function getFilteredResults(filters, results) {
   return filteredResults;
 }
 
-// probably change this so it sets it in the state rather than "getting it each time"
-function getPaginatedResults(results) { return chunk(results, 10) };
+function getPaginatedResults(results) { return chunk(results, itemsPerPage); }
+
+function getTotalPages(results) {
+  return results.length ? Math.ceil(results.length / itemsPerPage) : 0;
+}
 
 // DOM Manipulation
 function renderResults(results) {
@@ -154,6 +159,7 @@ function renderResults(results) {
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
+          <div class="">id: ${datum.id}</div>
           <div class="">name: ${datum.name}</div>
           <div class="">status: ${datum.status}</div>
           <div class="">species: ${datum.species}</div>
@@ -164,6 +170,12 @@ function renderResults(results) {
       `)
       .join('');
   }
+
+  updatePaginationMessaging(currentPage, paginatedResults.length);
+}
+
+function updatePaginationMessaging(currentPage, totalPages) {
+  document.querySelector('.pagination-controls-pagination-status').innerHTML = `Page ${currentPage + 1} of ${totalPages}`;
 }
 
 // Event Handlers
@@ -177,12 +189,34 @@ function handleFilterChange(event) {
   setFilters(name, value);
 
   const { allResults } = initialState;
-  const { filters, results } = state;
+  const { filters, currentPage, results } = state;
   
   const filteredResults = getFilteredResults(filters, allResults);
 
   setResults(filteredResults);
   renderResults(filteredResults);
+}
+
+function handlePageChange(event) {
+  const { currentPage, results } = state;
+  const totalPages = getTotalPages(results);
+
+  const lastPage = totalPages - 1;
+  const goBack = event.target.matches('.pagination-controls-btn--prev') && currentPage > 0;
+  const goForward = event.target.matches('.pagination-controls-btn--next') && currentPage < lastPage;
+  // let nextPage = currentPage;
+
+  if (goBack) {
+    // nextPage = currentPage - 1;
+    setCurrentPage(currentPage - 1);
+  } else if (goForward) {
+    // nextPage = currentPage + 1;
+    setCurrentPage(currentPage + 1);
+  }
+
+  if (goBack || goForward) {
+    renderResults(results);
+  }
 }
 
 // Event Listeners
@@ -219,33 +253,7 @@ filterControlsElement.addEventListener(
 
 const paginationControlsElement = document.querySelector('.pagination-controls');
 
-paginationControlsElement.addEventListener(
-  'click',
-  (event) => {
-    const paginatedResults = getPaginatedResults(state.results);
-
-    console.log('');
-    console.log('button click event listener');
-    console.log('  paginatedResults:', paginatedResults);
-
-    const lastPage = paginatedResults.length - 1;
-    const goBack = event.target.matches('.pagination-controls-btn--prev') && state.currentPage > 0;
-    const goForward = event.target.matches('.pagination-controls-btn--next') && state.currentPage !== lastPage;
-
-    if (goBack) {
-      setCurrentPage(state.currentPage - 1);
-    } else if (goForward) {
-      setCurrentPage(state.currentPage + 1);
-    }
-
-    if (goBack || goForward) {
-      renderResults(state.results);
-    }
-
-    console.log('state:', state);
-  },
-  false
-);
+paginationControlsElement.addEventListener('click', event => handlePageChange(event));
 
 // Initial Data Call
 loadCharacterData();
