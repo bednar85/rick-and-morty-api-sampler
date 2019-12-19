@@ -21,13 +21,9 @@ export const compare = (a, b) => {
 export const sortByKey = (data = [], direction = 'ascending', type = 'alphabetical', sortKey) => {
   let sortedData = data;
 
-  console.log('  sort util');
-
   if (type === 'numerical') {
-    console.log('  numerical');
     sortedData = data.slice().sort((a, b) => compare(a[sortKey], b[sortKey]));
   } else {
-    console.log('  else');
     sortedData = data.slice().sort((a, b) => 
       compare(a[sortKey].toString().toLowerCase(), b[sortKey].toString().toLowerCase())
     );
