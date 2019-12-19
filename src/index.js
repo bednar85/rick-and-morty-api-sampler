@@ -11,8 +11,8 @@ const initialState = {
     gender: ''
   },
   currentPageIndex: 0,
-  results: [],
-  allResults: []
+  characters: [],
+  allCharacters: []
 };
 
 let state = { ...initialState };
@@ -29,10 +29,10 @@ function setFilters(name, value) {
   };
 }
 
-function setResults(results) {
+function setCharacters(characters) {
   state = {
     ...state,
-    results
+    characters
   }
 }
 
@@ -64,19 +64,19 @@ function loadCharacterData() {
     fetch('https://rickandmortyapi.com/api/character/?page=5')
   ]).then(responses => Promise.all(responses.map(response => response.json()))
   ).then(data => {
-    // combine all of the results into one array
-    const combinedResults = data.flatMap(datum => datum.results);
+    // combine all of the characters into one array
+    const allCharacters = data.flatMap(datum => datum.results);
     
-    // set allResults in the initial state as a source of truth
-    initialState.allResults = combinedResults;
+    // set allCharacters in the initial state as a source of truth
+    initialState.allCharacters = allCharacters;
 
-    setResults(combinedResults);
-    renderResults(combinedResults);
+    setCharacters(allCharacters);
+    renderCharacters(allCharacters);
   });  
 }
 
 // Filter Logic
-function getFilteredResults(filters, results) {
+function getFilteredCharacters(filters, characters) {
   // no filters are applied if every value in Object.values(filters) is either an empty string or only contains spaces
   const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
@@ -91,7 +91,7 @@ function getFilteredResults(filters, results) {
     .filter(currentEntry => currentEntry[1].trim() !== '')
     .map(currentEntry => currentEntry[0]);
 
-  const filteredResults = results.filter(result => {
+  const filteredCharacters = characters.filter(result => {
     const conditions = {};
 
     // check each condition
@@ -113,17 +113,17 @@ function getFilteredResults(filters, results) {
     return Object.values(conditions).every(currentValue => currentValue === true);    
   });
 
-  return filteredResults;
+  return filteredCharacters;
 }
 
-function getPaginatedResults(results) { return chunk(results, itemsPerPage); }
+function getPaginatedCharacters(characters) { return chunk(characters, itemsPerPage); }
 
-function getTotalPages(results) {
-  return results.length ? Math.ceil(results.length / itemsPerPage) : 0;
+function getTotalPages(characters) {
+  return characters.length ? Math.ceil(characters.length / itemsPerPage) : 0;
 }
 
 // DOM Manipulation
-function renderResults(results) {
+function renderCharacters(characters) {
   // it would be easiest if right here is where we did the chunking and determined which page sub array to use
   const { currentPageIndex } = state;
 
@@ -131,14 +131,14 @@ function renderResults(results) {
   console.log('renderResults');
   console.log('  results:', results);
 
-  const paginatedResults = getPaginatedResults(results);
+  const paginatedCharacters = getPaginatedCharacters(characters);
 
   console.log('  paginatedResults:', paginatedResults);
 
-  if (!paginatedResults.length) {
-    document.getElementById('results').innerHTML = '<div class="">No results match those filters.</div>';
+  if (!paginatedCharacters.length) {
+    document.querySelector('.characters').innerHTML = '<div class="">No characters match those filters.</div>';
   } else {
-    document.getElementById('results').innerHTML = paginatedResults[currentPageIndex]
+    document.querySelector('.characters').innerHTML = paginatedCharacters[currentPageIndex]
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
@@ -154,7 +154,7 @@ function renderResults(results) {
       .join('');
   }
 
-  updatePaginationMessaging(currentPageIndex, paginatedResults.length);
+  updatePaginationMessaging(currentPageIndex, paginatedCharacters.length);
 }
 
 function updatePaginationMessaging(currentPageIndex, totalPages) {
@@ -173,18 +173,18 @@ function handleFilterChange(event) {
 
   setFilters(name, value);
 
-  const { allResults } = initialState;
-  const { filters, currentPageIndex, results } = state;
+  const { allCharacters } = initialState;
+  const { filters, currentPageIndex, characters } = state;
   
-  const filteredResults = getFilteredResults(filters, allResults);
+  const filteredCharacters = getFilteredCharacters(filters, allCharacters);
 
-  setResults(filteredResults);
-  renderResults(filteredResults);
+  setCharacters(filteredCharacters);
+  renderCharacters(filteredCharacters);
 }
 
 function handlePageChange(event) {
-  const { currentPageIndex, results } = state;
-  const totalPages = getTotalPages(results);
+  const { currentPageIndex, characters } = state;
+  const totalPages = getTotalPages(characters);
 
   // if totalPages is greater than zero, set lastPageIndex to totalPages - 1
   const lastPageIndex = totalPages > 0 ? totalPages - 1 : 0;
@@ -198,7 +198,7 @@ function handlePageChange(event) {
   }
 
   if (goBack || goForward) {
-    renderResults(results);
+    renderCharacters(characters);
   }
 }
 
