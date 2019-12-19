@@ -201,7 +201,7 @@ function handleFilterChange(event) {
 
 function handlePageChange(event) {
   const { currentPageIndex, results } = state;
-  const totalPages = results.length ? Math.ceil(results.length / itemsPerPage) : 0;
+  const totalPages = getTotalPages(results);
 
   // if totalPages is greater than zero, set lastPageIndex to totalPages - 1
   const lastPageIndex = totalPages > 0 ? totalPages - 1 : 0;
