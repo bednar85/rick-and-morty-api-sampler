@@ -12,7 +12,14 @@ const initialState = {
   },
   currentPageIndex: 0,
   characters: [],
-  allCharacters: []
+  locations: [],
+  episodes: []
+};
+
+const completeData = {
+  allCharacters: [],
+  allLocations: [],
+  allEpisodes: []
 };
 
 let state = { ...initialState };
@@ -33,6 +40,20 @@ function setCharacters(characters) {
   state = {
     ...state,
     characters
+  }
+}
+
+function setLocations(locations) {
+  state = {
+    ...state,
+    locations
+  }
+}
+
+function setEpisodes(episodes) {
+  state = {
+    ...state,
+    episodes
   }
 }
 
@@ -68,10 +89,44 @@ function loadCharacterData() {
     const allCharacters = data.flatMap(datum => datum.results);
     
     // set allCharacters in the initial state as a source of truth
-    initialState.allCharacters = allCharacters;
+    completeData.allCharacters = allCharacters;
 
     setCharacters(allCharacters);
     renderCharacters(allCharacters);
+  });  
+}
+
+function loadLocationData() {
+  Promise.all([
+    fetch('https://rickandmortyapi.com/api/location?page=1'),
+    fetch('https://rickandmortyapi.com/api/location?page=2'),
+    fetch('https://rickandmortyapi.com/api/location?page=3'),
+    fetch('https://rickandmortyapi.com/api/location?page=4')
+  ]).then(responses => Promise.all(responses.map(response => response.json()))
+  ).then(data => {
+    // combine all of the results into one array
+    const allLocations = data.flatMap(datum => datum.results);
+    
+    // set allLocations in the initial state as a source of truth
+    completeData.allLocations = allLocations;
+
+    setLocations(allLocations);
+  });  
+}
+
+function loadEpisodeData() {
+  Promise.all([
+    fetch('https://rickandmortyapi.com/api/episode?page=1'),
+    fetch('https://rickandmortyapi.com/api/episode?page=2')
+  ]).then(responses => Promise.all(responses.map(response => response.json()))
+  ).then(data => {
+    // combine all of the results into one array
+    const allEpisodes = data.flatMap(datum => datum.results);
+    
+    // set allEpisodes in the initial state as a source of truth
+    completeData.allEpisodes = allEpisodes;
+
+    setEpisodes(allEpisodes);
   });  
 }
 
@@ -81,7 +136,7 @@ function getFilteredCharacters(filters, characters) {
   const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
   if (noFiltersApplied) {
-    return initialState.allCharacters;
+    return completeData.allCharacters;
   }
 
   // convert filter object to an array of entries
@@ -173,7 +228,7 @@ function handleFilterChange(event) {
 
   setFilters(name, value);
 
-  const { allCharacters } = initialState;
+  const { allCharacters } = completeData;
   const { filters, currentPageIndex, characters } = state;
   
   const filteredCharacters = getFilteredCharacters(filters, allCharacters);
@@ -240,3 +295,5 @@ paginationControlsElement.addEventListener('click', event => handlePageChange(ev
 
 // Initial Data Call
 loadCharacterData();
+loadLocationData();
+loadEpisodeData();
