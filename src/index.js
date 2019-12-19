@@ -1,4 +1,4 @@
-import "./styles.css";
+import './styles.css';
 
 let state = {
   filters: {
@@ -29,9 +29,8 @@ function setResults(results) {
 
 function loadCharacterData() {
   Promise.all([
-    fetch("https://rickandmortyapi.com/api/character/?page=1"),
-    fetch("https://rickandmortyapi.com/api/character/?page=2"),
-    fetch("https://rickandmortyapi.com/api/character/?page=3")
+    fetch('https://rickandmortyapi.com/api/character/?page=1'),
+    fetch('https://rickandmortyapi.com/api/character/?page=3')
   ]).then(responses => Promise.all(responses.map(response => response.json()))
   ).then(data => {
     // combine all of the results into one array
@@ -46,7 +45,14 @@ function loadCharacterData() {
 }
 
 function getFilteredResults(filters, results) {
+  console.log('');
+  console.log('getFilteredResults');
+  console.log('  filters:', filters);
+  console.log('  results:', results);
+
   const noFiltersSet = Object.values(filters).every(currentValue => currentValue === '');
+  
+  console.log('  noFiltersSet:', noFiltersSet);
 
   if (noFiltersSet) {
     return state.allResults;
@@ -59,33 +65,44 @@ function getFilteredResults(filters, results) {
     .filter(currentEntry => currentEntry[1] !== '')
     .map(currentEntry => currentEntry[0]);
 
-  const filteredResults = results.filter(result => {
-    const conditions = [];
+  console.log('  activeFilterKeys:', activeFilterKeys);
 
+  const filteredResults = results.filter(result => {
+    const conditions = {};
+
+    console.log('');
+    console.log('  result.name:', result.name);
+    
     // check each condition
     if (activeFilterKeys.includes('name')) {
       const parsedResultName = result.name.toLowerCase();
       const parsedFilterName = filters.name.toLowerCase();
 
-      conditions.push(parsedResultName.includes(parsedFilterName));
+      conditions.name = parsedResultName.includes(parsedFilterName);
     }
 
     if (activeFilterKeys.includes('status')) {
-      conditions.push(result.status.toLowerCase() === filters.status.toLowerCase());
+      console.log('  result.status:', result.status);
+
+      conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
     }
 
     if (activeFilterKeys.includes('gender')) {
-      conditions.push(result.gender.toLowerCase() === filters.gender.toLowerCase());
+      console.log('  result.gender:', result.gender);
+
+      conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
     }
 
-    return conditions.every(currentValue => currentValue === true);    
+    console.log('  conditions:', conditions);
+
+    return Object.values(conditions).every(currentValue => currentValue === true);    
   });
 
   return filteredResults;
 }
 
 function renderResults(results) {
-  document.getElementById("results").innerHTML = results
+  document.getElementById('results').innerHTML = results
     .map(
       datum => `
   <div>    
@@ -100,29 +117,29 @@ function renderResults(results) {
   </div>
   `
     )
-    .join("");
+    .join('');
 }
 
 // const paginationControlsElement = document.querySelector('.pagination-controls');
 
 // paginationControlsElement.addEventListener(
-//   "click",
+//   'click',
 //   (event) => {
 //     if (
-//       event.target.matches(".pagination-controls-btn--prev") &&
+//       event.target.matches('.pagination-controls-btn--prev') &&
 //       state.info.prev
 //     ) {
 //       loadData(state.info.prev);
 //     }
 
 //     if (
-//       event.target.matches(".pagination-controls-btn--next") &&
+//       event.target.matches('.pagination-controls-btn--next') &&
 //       state.info.next
 //     ) {
 //       loadData(state.info.next);
 //     }
 
-//     console.log("state:", state);
+//     console.log('state:', state);
 //   },
 //   false
 // );
@@ -132,9 +149,9 @@ function handleFilterChange(event) {
 
   setFilters(name, value);
 
-  const { filters, results } = state;
+  const { filters, allResults } = state;
 
-  const filteredResults = getFilteredResults(filters, results);
+  const filteredResults = getFilteredResults(filters, allResults);
 
   setResults(filteredResults);
 
@@ -144,9 +161,9 @@ function handleFilterChange(event) {
 const filterControlsElement = document.querySelector('.filter-controls');
 
 filterControlsElement.addEventListener(
-  "change",
+  'change',
   event => {
-    if (event.target.matches(".filter-controls-select-input")) {
+    if (event.target.matches('.filter-controls-select-input')) {
       handleFilterChange(event);
     }
   },
@@ -155,7 +172,7 @@ filterControlsElement.addEventListener(
 
 // prevent form submittal via the Enter key, it's clearing the text input
 filterControlsElement.addEventListener(
-  "keydown",
+  'keydown',
   event => {
     if (event.keyCode == 13) {
       event.preventDefault();
@@ -165,12 +182,10 @@ filterControlsElement.addEventListener(
   false
 );
 
-
-
 filterControlsElement.addEventListener(
-  "keyup",
+  'keyup',
   event => {
-    if (event.target.matches(".filter-controls-text-input")) {
+    if (event.target.matches('.filter-controls-text-input')) {
       handleFilterChange(event);
     }
   },
