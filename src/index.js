@@ -199,6 +199,7 @@ function getSortedAndFilteredCharacters(filters, characters) {
     });
   }
 
+  // if filteredCharacters is empty, exit early and skip the sorting logic
   if (!filteredCharacters.length) {
     return filteredCharacters;
   }
