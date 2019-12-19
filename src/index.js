@@ -13,6 +13,13 @@ function setState(newState) {
   };
 }
 
+function setResults(results) {
+  state = {
+    ...state,
+    results
+  }
+}
+
 function loadCharacterData() {
   Promise.all([
     fetch("https://rickandmortyapi.com/api/character/?page=1"),
@@ -23,7 +30,7 @@ function loadCharacterData() {
     // combine all of the results into one array
     const combinedResults = data.flatMap(datum => datum.results);
 
-    setState({ results: combinedResults });
+    setResults(combinedResults);
     renderResults(combinedResults);
   });  
 }
