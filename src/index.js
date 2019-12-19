@@ -1,6 +1,6 @@
 import './styles.css';
 
-import { chunk, compare, sort, sortByArrayLength } from './utils.js';
+import { chunk, compare, sortByKey, sortByArrayLength } from './utils.js';
 
 const itemsPerPage = 10;
 
@@ -12,7 +12,7 @@ const initialState = {
   },
   sortOptions: {
     sortBy: 'id',
-    sortDirection: 'descending'
+    sortDirection: 'ascending'
   },
   currentPageIndex: 0,
   characters: [],
@@ -151,49 +151,77 @@ function loadEpisodeData() {
 
 // Filter Logic
 function getSortedAndFilteredCharacters(filters, characters) {
-  // Filter Logic
-  // no filters are applied if every value in Object.values(filters) is either an empty string or only contains spaces
-  const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
-  if (noFiltersApplied) {
-    return completeData.allCharacters;
+  // Filter Logic
+  // filters are applied if any of the values in Object.values(filters) are set to something other than an empty string or only contains spaces
+  const filtersApplied = Object.values(filters).some(currentValue => currentValue.trim() !== '');
+
+  // start by setting filteredCharacters to the entire data set
+  let filteredCharacters = completeData.allCharacters;
+  
+  if (filtersApplied) {
+    // convert filter object to an array of entries
+    // exclude key value pairs in which the value is an empty string
+    // map over the remaining key value pairs so it's an array of only the active keys
+    const activeFilterKeys = Object.entries(filters)
+      .filter(currentEntry => currentEntry[1].trim() !== '')
+      .map(currentEntry => currentEntry[0]);
+
+    filteredCharacters = characters.filter(result => {
+      const conditions = {};
+
+      // console.log('');
+      // console.log('  result.name:', result.name);
+
+      // check each condition
+      if (activeFilterKeys.includes('name')) {
+        const parsedResultName = result.name.toLowerCase();
+        const parsedFilterName = filters.name.toLowerCase().trim();
+
+        conditions.name = parsedResultName.includes(parsedFilterName);
+      }
+
+      if (activeFilterKeys.includes('status')) {
+        // console.log('  result.status:', result.status);
+
+        conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
+      }
+
+      if (activeFilterKeys.includes('gender')) {
+        // console.log('  result.gender:', result.gender);
+
+        conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
+      }
+
+      // console.log('  conditions:', conditions);
+
+      return Object.values(conditions).every(currentValue => currentValue === true);    
+    });
   }
 
-  // convert filter object to an array of entries
-  // exclude key value pairs in which the value is an empty string
-  // map over the remaining key value pairs so it's an array of only the active keys
-  const activeFilterKeys = Object.entries(filters)
-    .filter(currentEntry => currentEntry[1].trim() !== '')
-    .map(currentEntry => currentEntry[0]);
-
-  const filteredCharacters = characters.filter(result => {
-    const conditions = {};
-
-    // check each condition
-    if (activeFilterKeys.includes('name')) {
-      const parsedResultName = result.name.toLowerCase();
-      const parsedFilterName = filters.name.toLowerCase().trim();
-
-      conditions.name = parsedResultName.includes(parsedFilterName);
-    }
-
-    if (activeFilterKeys.includes('status')) {
-      conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
-    }
-
-    if (activeFilterKeys.includes('gender')) {
-      conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
-    }
-
-    return Object.values(conditions).every(currentValue => currentValue === true);    
-  });
+  if (!filteredCharacters.length) {
+    return filteredCharacters;
+  }
 
   // Sorting Logic
   const { sortOptions } = state;
 
+
   const { sortBy, sortDirection } = sortOptions;
 
-  const sortedCharacters = filteredCharacters;
+  let sortedCharacters = filteredCharacters;
+
+  if (sortBy === 'id') {
+    console.log('  id');
+    sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'numerical', sortBy);
+  } else if (sortBy === 'episodes') {
+    console.log('  episodes');
+    sortedCharacters = sortByArrayLength(filteredCharacters, sortDirection, 'episode');
+  } else {
+    console.log('  else');
+    sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'alphabetical', sortBy);
+  }
+
 
   return sortedCharacters;
 }
@@ -224,13 +252,14 @@ function renderCharacters(characters) {
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
-          <div class="">id: ${datum.id}</div>
-          <div class="">name: ${datum.name}</div>
-          <div class="">status: ${datum.status}</div>
-          <div class="">species: ${datum.species}</div>
-          <div class="">gender: ${datum.gender}</div>
-          <div class="">origin: ${datum.origin.name}</div>
-          <div class="">location: ${datum.location.name}</div>
+          <div class="">Id: ${datum.id}</div>
+          <div class="">Name: ${datum.name}</div>
+          <div class="">Status: ${datum.status}</div>
+          <div class="">Species: ${datum.species}</div>
+          <div class="">Gender: ${datum.gender}</div>
+          <div class="">Origin: ${datum.origin.name}</div>
+          <div class="">Location: ${datum.location.name}</div>
+          <div class="">Episode Count: ${datum.episode.length}</div>
         </div>
       `)
       .join('');
@@ -247,10 +276,6 @@ function updatePaginationMessaging(currentPageIndex, totalPages) {
 
 // Event Handlers
 function handleFilterChange(event) {
-  console.log('');
-  console.log('handleFilterChange');
-  console.log('  state:', state);
-
   const { name, value } = event.target;
 
   setFilters(name, value);
