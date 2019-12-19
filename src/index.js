@@ -97,7 +97,7 @@ function getFilteredResults(filters, results) {
     // check each condition
     if (activeFilterKeys.includes('name')) {
       const parsedResultName = result.name.toLowerCase();
-      const parsedFilterName = filters.name.toLowerCase();
+      const parsedFilterName = filters.name.toLowerCase().trim();
 
       conditions.name = parsedResultName.includes(parsedFilterName);
     }
