@@ -12,6 +12,7 @@ const initialState = {
 
 let state = { ...initialState };
 
+// Update Various Sections of State
 function setFilters(name, value) {
   state = {
     ...state,
@@ -29,6 +30,7 @@ function setResults(results) {
   }
 }
 
+// Load Data Method
 function loadCharacterData() {
   Promise.all([
     fetch('https://rickandmortyapi.com/api/character/?page=1'),
@@ -47,6 +49,7 @@ function loadCharacterData() {
   });  
 }
 
+// Filter Logic
 function getFilteredResults(filters, results) {
   console.log('');
   console.log('getFilteredResults');
@@ -104,6 +107,7 @@ function getFilteredResults(filters, results) {
   return filteredResults;
 }
 
+// Generated Elements
 function renderResults(results) {
   document.getElementById('results').innerHTML = results
     .map(
@@ -147,6 +151,7 @@ function renderResults(results) {
 //   false
 // );
 
+// Event Handlers
 function handleFilterChange(event) {
   const { name, value } = event.target;
 
@@ -165,6 +170,7 @@ function handleFilterChange(event) {
   renderResults(filteredResults);
 }
 
+// Event Listeners
 const filterControlsElement = document.querySelector('.filter-controls');
 
 filterControlsElement.addEventListener(
@@ -199,4 +205,5 @@ filterControlsElement.addEventListener(
   false
 );
 
+// Initial Data Call
 loadCharacterData();
