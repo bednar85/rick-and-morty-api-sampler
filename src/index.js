@@ -1,11 +1,14 @@
 import './styles.css';
 
+import { chunk } from './utils.js';
+
 const initialState = {
   filters: {
     name: '',
     status: '',
     gender: ''
   },
+  currentPage: 0,
   results: [],
   allResults: []
 };
@@ -19,7 +22,8 @@ function setFilters(name, value) {
     filters: {
       ...state.filters,
       [name]: value
-    }
+    },
+    currentPage: 0
   };
 }
 
@@ -29,6 +33,24 @@ function setResults(results) {
     results
   }
 }
+
+function resetFilters() {
+  state = {
+    ...state,
+    filters: {
+      ...initialState.filters
+    },
+    currentPage: initialState.currentPage
+  };
+}
+
+function setCurrentPage(pageIndex) {
+  state = {
+    ...state,
+    currentPage: pageIndex
+  };
+}
+
 
 // Load Data Method
 function loadCharacterData() {
@@ -107,9 +129,23 @@ function getFilteredResults(filters, results) {
   return filteredResults;
 }
 
+// probably change this so it sets it in the state rather than "getting it each time"
+function getPaginatedResults(results) { return chunk(results, 10) };
+
 // Generated Elements
 function renderResults(results) {
-  document.getElementById('results').innerHTML = results
+  // it would be easiest if right here is where we did the chunking and determined which page sub array to use
+  const { currentPage } = state;
+
+  console.log('');
+  console.log('renderResults');
+  console.log('  results:', results);
+
+  const paginatedResults = getPaginatedResults(results);
+
+  console.log('  paginatedResults:', paginatedResults);
+
+  document.getElementById('results').innerHTML = paginatedResults[currentPage]
     .map(
       datum => `
   <div>    
@@ -127,32 +163,12 @@ function renderResults(results) {
     .join('');
 }
 
-// const paginationControlsElement = document.querySelector('.pagination-controls');
-
-// paginationControlsElement.addEventListener(
-//   'click',
-//   (event) => {
-//     if (
-//       event.target.matches('.pagination-controls-btn--prev') &&
-//       state.info.prev
-//     ) {
-//       loadData(state.info.prev);
-//     }
-
-//     if (
-//       event.target.matches('.pagination-controls-btn--next') &&
-//       state.info.next
-//     ) {
-//       loadData(state.info.next);
-//     }
-
-//     console.log('state:', state);
-//   },
-//   false
-// );
-
 // Event Handlers
 function handleFilterChange(event) {
+  console.log('');
+  console.log('handleFilterChange');
+  console.log('  state:', state);
+
   const { name, value } = event.target;
 
   setFilters(name, value);
@@ -164,6 +180,8 @@ function handleFilterChange(event) {
 
   // if filteredResults.length !== results
   // reset current page
+
+  console.log('  filteredResults:', filteredResults);
 
   setResults(filteredResults);
 
@@ -201,6 +219,36 @@ filterControlsElement.addEventListener(
     if (event.target.matches('.filter-controls-text-input')) {
       handleFilterChange(event);
     }
+  },
+  false
+);
+
+const paginationControlsElement = document.querySelector('.pagination-controls');
+
+paginationControlsElement.addEventListener(
+  'click',
+  (event) => {
+    const paginatedResults = getPaginatedResults(state.results);
+
+    console.log('');
+    console.log('button click event listener');
+    console.log('  paginatedResults:', paginatedResults);
+
+    const lastPage = paginatedResults.length - 1;
+    const goBack = event.target.matches('.pagination-controls-btn--prev') && state.currentPage > 0;
+    const goForward = event.target.matches('.pagination-controls-btn--next') && state.currentPage !== lastPage;
+
+    if (goBack) {
+      setCurrentPage(state.currentPage - 1);
+    } else if (goForward) {
+      setCurrentPage(state.currentPage + 1);
+    }
+
+    if (goBack || goForward) {
+      renderResults(state.results);
+    }
+
+    console.log('state:', state);
   },
   false
 );
