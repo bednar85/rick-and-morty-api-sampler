@@ -77,16 +77,10 @@ function loadCharacterData() {
 
 // Filter Logic
 function getFilteredResults(filters, results) {
-  console.log('');
-  console.log('getFilteredResults');
-  console.log('  filters:', filters);
-  console.log('  results:', results);
+  // no filters are applied if every value in Object.values(filters) is either an empty string or only contains spaces
+  const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
-  const noFiltersSet = Object.values(filters).every(currentValue => currentValue === '');
-  
-  console.log('  noFiltersSet:', noFiltersSet);
-
-  if (noFiltersSet) {
+  if (noFiltersApplied) {
     return initialState.allResults;
   }
 
@@ -94,17 +88,12 @@ function getFilteredResults(filters, results) {
   // exclude key value pairs in which the value is an empty string
   // map over the remaining key value pairs so it's an array of only the active keys
   const activeFilterKeys = Object.entries(filters)
-    .filter(currentEntry => currentEntry[1] !== '')
+    .filter(currentEntry => currentEntry[1].trim() !== '')
     .map(currentEntry => currentEntry[0]);
-
-  console.log('  activeFilterKeys:', activeFilterKeys);
 
   const filteredResults = results.filter(result => {
     const conditions = {};
 
-    console.log('');
-    console.log('  result.name:', result.name);
-    
     // check each condition
     if (activeFilterKeys.includes('name')) {
       const parsedResultName = result.name.toLowerCase();
@@ -114,18 +103,12 @@ function getFilteredResults(filters, results) {
     }
 
     if (activeFilterKeys.includes('status')) {
-      console.log('  result.status:', result.status);
-
       conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
     }
 
     if (activeFilterKeys.includes('gender')) {
-      console.log('  result.gender:', result.gender);
-
       conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
     }
-
-    console.log('  conditions:', conditions);
 
     return Object.values(conditions).every(currentValue => currentValue === true);    
   });
