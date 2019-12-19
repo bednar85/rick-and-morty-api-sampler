@@ -81,7 +81,7 @@ function getFilteredCharacters(filters, characters) {
   const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
   if (noFiltersApplied) {
-    return initialState.allResults;
+    return initialState.allCharacters;
   }
 
   // convert filter object to an array of entries
