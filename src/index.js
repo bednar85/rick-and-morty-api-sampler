@@ -89,7 +89,6 @@ function setCurrentPageIndex(pageIndex) {
   };
 }
 
-
 // Load Data Method
 function loadCharacterData() {
   Promise.all([

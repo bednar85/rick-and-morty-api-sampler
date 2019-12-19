@@ -18,16 +18,22 @@ export const compare = (a, b) => {
   return 0;
 }
 
-export const sortByKey = (data = [], direction = 'ascending', type = 'alphabetical', sortKey) => {
+export const sortByKey = (data = [], direction = 'ascending', type, sortKey) => {
   let sortedData = data;
 
-  if (type === 'numerical') {
-    sortedData = data.slice().sort((a, b) => compare(a[sortKey], b[sortKey]));
-  } else {
-    sortedData = data.slice().sort((a, b) => 
-      compare(a[sortKey].toString().toLowerCase(), b[sortKey].toString().toLowerCase())
+  sortedData = data.slice().sort((a, b) => {
+    const aSortValue = a[sortKey];
+    const bSortValue = b[sortKey];
+
+    if (type === 'numerical') {
+      return compare(aSortValue, bSortValue)
+    }
+
+    return compare(
+      aSortValue.toString().toLowerCase(),
+      bSortValue.toString().toLowerCase()
     );
-  }
+  });
 
   return direction === 'descending' ? sortedData.reverse() : sortedData;
 }
