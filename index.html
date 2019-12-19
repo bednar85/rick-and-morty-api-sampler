@@ -42,6 +42,33 @@
       </select>
     </fieldset>
   </form>
+  <form class="sort-controls">
+    <fieldset class="sort-controls-fieldset">
+      <label for="sort-by-input" class="sort-controls-input-label">Sort By:</label>
+      <select
+        name="sortBy"
+        id="sort-by-select"
+        class="sort-controls-select-input"
+      >
+        <option value="id" selected>Id</option>
+        <option value="name">Name</option>
+        <option value="dead">Status</option>
+        <option value="gender">Gender</option>
+        <option value="episodes">Episodes Appeared In</option>
+      </select>
+    </fieldset>
+    <fieldset class="sort-controls-fieldset">
+      <label for="sort-direction-select" class="sort-controls-input-label">Direction:</label>
+      <select
+        name="sortDirection"
+        id="sort-direction-select"
+        class="sort-controls-select-input"
+      >
+        <option value="ascending">Ascending</option>
+        <option value="descending" selected>Descending</option>
+      </select>
+    </fieldset>
+  </form>
   <div class="characters"></div>
   <div class="pagination-controls">
     <button class="pagination-controls-btn pagination-controls-btn--prev">

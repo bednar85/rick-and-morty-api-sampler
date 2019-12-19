@@ -10,6 +10,10 @@ const initialState = {
     status: '',
     gender: ''
   },
+  sortOptions: {
+    sortBy: 'id',
+    sortDirection: 'descending'
+  },
   currentPageIndex: 0,
   characters: [],
   locations: [],
@@ -25,12 +29,23 @@ const completeData = {
 let state = { ...initialState };
 
 // Update Various Sections of State
-function setFilters(name, value) {
+function setFilters(key, value) {
   state = {
     ...state,
     filters: {
       ...state.filters,
-      [name]: value
+      [key]: value
+    },
+    currentPageIndex: 0
+  };
+}
+
+function setSortOptions(key, value) {
+  state = {
+    ...state,
+    sortOptions: {
+      ...state.sortOptions,
+      [key]: value
     },
     currentPageIndex: 0
   };
@@ -135,7 +150,8 @@ function loadEpisodeData() {
 }
 
 // Filter Logic
-function getFilteredCharacters(filters, characters) {
+function getSortedAndFilteredCharacters(filters, characters) {
+  // Filter Logic
   // no filters are applied if every value in Object.values(filters) is either an empty string or only contains spaces
   const noFiltersApplied = Object.values(filters).every(currentValue => currentValue.trim() === '');
 
@@ -172,7 +188,14 @@ function getFilteredCharacters(filters, characters) {
     return Object.values(conditions).every(currentValue => currentValue === true);    
   });
 
-  return filteredCharacters;
+  // Sorting Logic
+  const { sortOptions } = state;
+
+  const { sortBy, sortDirection } = sortOptions;
+
+  const sortedCharacters = filteredCharacters;
+
+  return sortedCharacters;
 }
 
 function getPaginatedCharacters(characters) { return chunk(characters, itemsPerPage); }
@@ -201,6 +224,7 @@ function renderCharacters(characters) {
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
+          <div class="">id: ${datum.id}</div>
           <div class="">name: ${datum.name}</div>
           <div class="">status: ${datum.status}</div>
           <div class="">species: ${datum.species}</div>
@@ -232,9 +256,23 @@ function handleFilterChange(event) {
   setFilters(name, value);
 
   const { allCharacters } = completeData;
-  const { filters, currentPageIndex, characters } = state;
+  const { filters, characters } = state;
   
-  const filteredCharacters = getFilteredCharacters(filters, allCharacters);
+  const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
+
+  setCharacters(filteredCharacters);
+  renderCharacters(filteredCharacters);
+}
+
+function handleSortChange(event) {
+  const { name, value } = event.target;
+
+  setSortOptions(name, value);
+
+  const { allCharacters } = completeData;
+  const { filters, characters } = state;
+  
+  const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
 
   setCharacters(filteredCharacters);
   renderCharacters(filteredCharacters);
@@ -268,6 +306,17 @@ filterControlsElement.addEventListener(
   event => {
     if (event.target.matches('.filter-controls-select-input')) {
       handleFilterChange(event);
+    }
+  }
+);
+
+const sortControlsElement = document.querySelector('.sort-controls');
+
+sortControlsElement.addEventListener(
+  'change',
+  event => {
+    if (event.target.matches('.sort-controls-select-input')) {
+      handleSortChange(event);
     }
   }
 );
