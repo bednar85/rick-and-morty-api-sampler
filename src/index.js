@@ -10,7 +10,7 @@ const initialState = {
     status: '',
     gender: ''
   },
-  currentPage: 0,
+  currentPageIndex: 0,
   results: [],
   allResults: []
 };
@@ -25,7 +25,7 @@ function setFilters(name, value) {
       ...state.filters,
       [name]: value
     },
-    currentPage: 0
+    currentPageIndex: 0
   };
 }
 
@@ -42,14 +42,14 @@ function resetFilters() {
     filters: {
       ...initialState.filters
     },
-    currentPage: initialState.currentPage
+    currentPageIndex: initialState.currentPageIndex
   };
 }
 
-function setCurrentPage(pageIndex) {
+function setCurrentPageIndex(pageIndex) {
   state = {
     ...state,
-    currentPage: pageIndex
+    currentPageIndex: pageIndex
   };
 }
 
@@ -142,7 +142,7 @@ function getTotalPages(results) {
 // DOM Manipulation
 function renderResults(results) {
   // it would be easiest if right here is where we did the chunking and determined which page sub array to use
-  const { currentPage } = state;
+  const { currentPageIndex } = state;
 
   console.log('');
   console.log('renderResults');
@@ -153,9 +153,9 @@ function renderResults(results) {
   console.log('  paginatedResults:', paginatedResults);
 
   if (!paginatedResults.length) {
-    document.getElementById('results').innerHTML = '<div class="">No results</div>';
+    document.getElementById('results').innerHTML = '<div class="">No results match those filters.</div>';
   } else {
-    document.getElementById('results').innerHTML = paginatedResults[currentPage]
+    document.getElementById('results').innerHTML = paginatedResults[currentPageIndex]
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
@@ -171,11 +171,13 @@ function renderResults(results) {
       .join('');
   }
 
-  updatePaginationMessaging(currentPage, paginatedResults.length);
+  updatePaginationMessaging(currentPageIndex, paginatedResults.length);
 }
 
-function updatePaginationMessaging(currentPage, totalPages) {
-  document.querySelector('.pagination-controls-pagination-status').innerHTML = `Page ${currentPage + 1} of ${totalPages}`;
+function updatePaginationMessaging(currentPageIndex, totalPages) {
+  const paginationMessaging = totalPages === 0 ? '' : `Page ${currentPageIndex + 1} of ${totalPages}`;
+
+  document.querySelector('.pagination-controls-pagination-status').innerHTML = paginationMessaging;
 }
 
 // Event Handlers
@@ -189,7 +191,7 @@ function handleFilterChange(event) {
   setFilters(name, value);
 
   const { allResults } = initialState;
-  const { filters, currentPage, results } = state;
+  const { filters, currentPageIndex, results } = state;
   
   const filteredResults = getFilteredResults(filters, allResults);
 
@@ -198,20 +200,18 @@ function handleFilterChange(event) {
 }
 
 function handlePageChange(event) {
-  const { currentPage, results } = state;
-  const totalPages = getTotalPages(results);
+  const { currentPageIndex, results } = state;
+  const totalPages = results.length ? Math.ceil(results.length / itemsPerPage) : 0;
 
-  const lastPage = totalPages - 1;
-  const goBack = event.target.matches('.pagination-controls-btn--prev') && currentPage > 0;
-  const goForward = event.target.matches('.pagination-controls-btn--next') && currentPage < lastPage;
-  // let nextPage = currentPage;
+  // if totalPages is greater than zero, set lastPageIndex to totalPages - 1
+  const lastPageIndex = totalPages > 0 ? totalPages - 1 : 0;
+  const goBack = event.target.matches('.pagination-controls-btn--prev') && currentPageIndex > 0;
+  const goForward = event.target.matches('.pagination-controls-btn--next') && currentPageIndex < lastPageIndex;
 
   if (goBack) {
-    // nextPage = currentPage - 1;
-    setCurrentPage(currentPage - 1);
+    setCurrentPageIndex(currentPageIndex - 1);
   } else if (goForward) {
-    // nextPage = currentPage + 1;
-    setCurrentPage(currentPage + 1);
+    setCurrentPageIndex(currentPageIndex + 1);
   }
 
   if (goBack || goForward) {
