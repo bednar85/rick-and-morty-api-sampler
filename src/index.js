@@ -145,22 +145,23 @@ function renderResults(results) {
 
   console.log('  paginatedResults:', paginatedResults);
 
-  document.getElementById('results').innerHTML = paginatedResults[currentPage]
-    .map(
-      datum => `
-  <div>    
-    <img src="${datum.image}" width="160" height="160" />
-    <div>id: ${datum.id}</div>
-    <div>name: ${datum.name}</div>
-    <div>status: ${datum.status}</div>
-    <div>species: ${datum.species}</div>
-    <div>gender: ${datum.gender}</div>
-    <div>origin: ${datum.origin.name}</div>
-    <div>location: ${datum.location.name}</div>
-  </div>
-  `
-    )
-    .join('');
+  if (!paginatedResults.length) {
+    document.getElementById('results').innerHTML = '<div class="">No results</div>';
+  } else {
+    document.getElementById('results').innerHTML = paginatedResults[currentPage]
+      .map(datum => `
+        <div class="">    
+          <img class="" src="${datum.image}" width="160" height="160" />
+          <div class="">name: ${datum.name}</div>
+          <div class="">status: ${datum.status}</div>
+          <div class="">species: ${datum.species}</div>
+          <div class="">gender: ${datum.gender}</div>
+          <div class="">origin: ${datum.origin.name}</div>
+          <div class="">location: ${datum.location.name}</div>
+        </div>
+      `)
+      .join('');
+  }
 }
 
 // Event Handlers
@@ -184,7 +185,6 @@ function handleFilterChange(event) {
   console.log('  filteredResults:', filteredResults);
 
   setResults(filteredResults);
-
   renderResults(filteredResults);
 }
 
