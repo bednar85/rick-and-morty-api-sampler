@@ -201,7 +201,6 @@ function renderCharacters(characters) {
       .map(datum => `
         <div class="">    
           <img class="" src="${datum.image}" width="160" height="160" />
-          <div class="">id: ${datum.id}</div>
           <div class="">name: ${datum.name}</div>
           <div class="">status: ${datum.status}</div>
           <div class="">species: ${datum.species}</div>
