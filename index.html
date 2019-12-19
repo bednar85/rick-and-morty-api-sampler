@@ -6,27 +6,35 @@
 </head>
 <body>
   <form class="filter-controls">
-    <fieldset>
-    <label for="name-input">Name:</label><input id="name-input" name="name" type="text" />
+    <fieldset class="filter-controls-fieldset">
+      <label for="name-input" class="filter-controls-input-label">Name:</label>
+      <input
+        id="name-input"
+        class="filter-controls-text-input"
+        name="name"
+        type="text"
+      />
     </fieldset>
-    <fieldset>
-      <label for="status-select">Status:</label>
-      <select name="status" id="status-select">
+    <fieldset class="filter-controls-fieldset">
+      <label for="status-select" class="filter-controls-input-label">Status:</label>
+      <select
+        name="status"
+        id="status-select"
+        class="filter-controls-select-input"
+      >
         <option value="">Choose an option</option>
         <option value="alive">Alive</option>
         <option value="dead">Dead</option>
         <option value="unknown">Unknown</option>
       </select>
     </fieldset>
-    <fieldset>
-      <label for="species-input">Species:</label><input id="species-input" name="species" type="text" />
-    </fieldset>
-    <fieldset>
-      <label for="type-input">Type:</label><input id="type-input" name="name" type="text" />
-    </fieldset>
-    <fieldset>
-      <label for="gender-select">Gender:</label>
-      <select name="gender" id="gender-select">
+    <fieldset class="filter-controls-fieldset">
+      <label for="gender-select" class="filter-controls-input-label">Gender:</label>
+      <select
+        name="gender"
+        id="gender-select"
+        class="filter-controls-select-input"
+      >
         <option value="">Choose an option</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
