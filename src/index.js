@@ -127,6 +127,7 @@ function loadLocationData() {
     const sortedLocations = sortByArrayLength(allLocations, 'descending', 'residents');
 
     setLocations(sortedLocations);
+    renderLocationsList(sortedLocations);
   });  
 }
 
@@ -145,6 +146,7 @@ function loadEpisodeData() {
     const sortedEpisodes = sortByArrayLength(allEpisodes, 'descending', 'characters');
     
     setEpisodes(sortedEpisodes);
+    renderEpisodesList(sortedEpisodes);
   });  
 }
 
@@ -272,6 +274,32 @@ function updatePaginationMessaging(currentPageIndex, totalPages) {
   const paginationMessaging = totalPages === 0 ? '' : `Page ${currentPageIndex + 1} of ${totalPages}`;
 
   document.querySelector('.pagination-controls-pagination-status').innerHTML = paginationMessaging;
+}
+
+function renderLocationsList(locations) {
+  document.querySelector('.locations-card-list').innerHTML = locations
+    .slice(0, 5)
+    .map(datum => `
+      <li class="">    
+        <div class="">Name: ${datum.name}</div>
+        <div class="">Dimension: ${datum.dimension}</div>
+        <div class="">Residents: ${datum.residents.length}</div>
+      </li>
+    `)
+    .join('');
+}
+
+function renderEpisodesList(episodes) {
+  document.querySelector('.episodes-card-list').innerHTML = episodes
+    .slice(0, 5)
+    .map(datum => `
+      <li class="">    
+        <div class="">Name: ${datum.name}</div>
+        <div class="">Episode: ${datum.episode}</div>
+        <div class="">Residents: ${datum.characters.length}</div>
+      </li>
+    `)
+    .join('');
 }
 
 // Event Handlers
