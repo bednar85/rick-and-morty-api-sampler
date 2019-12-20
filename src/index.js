@@ -171,9 +171,6 @@ function getSortedAndFilteredCharacters(filters, characters) {
     filteredCharacters = characters.filter(result => {
       const conditions = {};
 
-      // console.log('');
-      // console.log('  result.name:', result.name);
-
       // check each condition
       if (activeFilterKeys.includes('name')) {
         const parsedResultName = result.name.toLowerCase();
@@ -183,18 +180,12 @@ function getSortedAndFilteredCharacters(filters, characters) {
       }
 
       if (activeFilterKeys.includes('status')) {
-        // console.log('  result.status:', result.status);
-
         conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
       }
 
       if (activeFilterKeys.includes('gender')) {
-        // console.log('  result.gender:', result.gender);
-
         conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
       }
-
-      // console.log('  conditions:', conditions);
 
       return Object.values(conditions).every(currentValue => currentValue === true);    
     });
@@ -214,16 +205,12 @@ function getSortedAndFilteredCharacters(filters, characters) {
   let sortedCharacters = filteredCharacters;
 
   if (sortBy === 'id') {
-    console.log('  id');
     sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'numerical', sortBy);
   } else if (sortBy === 'episodes') {
-    console.log('  episodes');
     sortedCharacters = sortByArrayLength(filteredCharacters, sortDirection, 'episode');
   } else {
-    console.log('  else');
     sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'alphabetical', sortBy);
   }
-
 
   return sortedCharacters;
 }
@@ -239,13 +226,7 @@ function renderCharacters(characters) {
   // it would be easiest if right here is where we did the chunking and determined which page sub array to use
   const { currentPageIndex } = state;
 
-  console.log('');
-  console.log('renderResults');
-  console.log('  results:', results);
-
   const paginatedCharacters = getPaginatedCharacters(characters);
-
-  console.log('  paginatedResults:', paginatedResults);
 
   if (!paginatedCharacters.length) {
     document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">No characters match those filters.</div>';
