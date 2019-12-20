@@ -280,9 +280,9 @@ function renderLocationsList(locations) {
     .slice(0, 5)
     .map(datum => `
       <li class="data-card-list-item">    
-        <div class="">Name: ${datum.name}</div>
-        <div class="">Dimension: ${datum.dimension}</div>
-        <div class="">Residents: ${datum.residents.length}</div>
+        <div class="data-card-list-item-heading">${datum.name}</div>
+        <div class="data-card-list-item-subheading">located in the ${datum.dimension}</div>
+        <div class="data-card-list-item-text">${datum.residents.length} residents</div>
       </li>
     `)
     .join('');
@@ -293,8 +293,9 @@ function renderEpisodesList(episodes) {
     .slice(0, 5)
     .map(datum => `
       <li class="data-card-list-item">
-        <div class="">${datum.name} (${datum.episode})</div>
-        <div class="">${datum.characters.length} Characters</div>
+        <div class="data-card-list-item-heading">${datum.name}</div>
+        <div class="data-card-list-item-subheading">${datum.episode}</div>
+        <div class="data-card-list-item-text">${datum.characters.length} characters</div>
       </li>
     `)
     .join('');

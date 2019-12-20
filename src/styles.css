@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 
+/* General Styles */
 * {
   box-sizing: border-box;
 }
@@ -19,8 +20,8 @@ p {
 }
 
 
-/* .section {} */
 
+/* Top Section */
 .section-header {
   padding: 20px;
 }
@@ -29,6 +30,9 @@ p {
   margin-bottom: 30px;
 }
 
+
+
+/* Forms */
 .control-forms {
   display: flex;
 }
@@ -47,23 +51,14 @@ p {
   padding: 0;
 }
 
-
 .filter-form-fieldset:last-child,
 .sort-form-fieldset:last-child {
   margin-bottom: 0;
 }
 
-/* .filter-form {}
-.filter-form-fieldset {}
-.filter-form-input-label {}
-.filter-form-text-input {}
-
-.sort-form {}
-.sort-form-fieldset {}
-.sort-form-input-label {}
-.sort-form-select-input {} */
 
 
+/* Character Cards and No Results Message */
 .character-cards {
   display: flex;
   flex-wrap: wrap;
@@ -84,8 +79,6 @@ p {
   margin-bottom: 20px;
 }
 
-/* .character-card-heading {} */
-
 .character-card-body {
   margin: 0 auto;
   text-align: left;
@@ -100,6 +93,9 @@ p {
   padding: 20px;
 }
 
+
+
+/* Pagination Controls */
 .pagination-controls {
   text-align: center;
 }
@@ -110,7 +106,7 @@ p {
   color: #FB4300;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   margin: 15px;
   padding: 10px 15px;
   text-transform: uppercase;
@@ -125,8 +121,9 @@ p {
   font-size: 16px;
 }
 
-/* .pagination-controls-btn {} */
 
+
+/* Data Cards */
 .data-cards {
   display: flex;
   flex-wrap: wrap;
@@ -135,11 +132,37 @@ p {
 .data-card {
   border: 2px solid #96d0e4;
   box-shadow: 6px 6px #96d0e4;
+  flex-grow: 1;
   margin: 1%;
   padding: 20px;
   width: 48%;
-  flex-grow: 1;
 }
 
-/* .data-card-heading {}
-.data-card-list {} */
+.data-card-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.data-card-list-item {
+  margin-bottom: 15px;
+}
+
+.data-card-list-item-heading {
+  font-weight: 900;
+}
+
+.data-card-list-item-subheading {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.data-card-list-item-subheading,
+.data-card-list-item-text {
+  color: #999;
+}
+
+.data-card-list-item-text {
+  font-size: 14px;
+  font-style: italic;
+}
