@@ -160,7 +160,7 @@ function loadEpisodeData() {
 function getSortedAndFilteredCharacters(filters, characters) {
 
   // Filter Logic
-  // filters are applied if any of the values in Object.values(filters) are set to something other than an empty string or only contains spaces
+  // filters are applied if any of the values in Object.values(filters) are set to something other than an empty string or only spaces
   const filtersApplied = Object.values(filters).some(currentValue => currentValue.trim() !== '');
 
   // start by setting filteredCharacters to the entire data set
@@ -169,7 +169,7 @@ function getSortedAndFilteredCharacters(filters, characters) {
   if (filtersApplied) {
     // convert filter object to an array of entries
     // exclude key value pairs in which the value is an empty string
-    // map over the remaining key value pairs so it's an array of only the active keys
+    // map over the remaining key value pairs so it's an array of only the active filter keys
     const activeFilterKeys = Object.entries(filters)
       .filter(currentEntry => currentEntry[1].trim() !== '')
       .map(currentEntry => currentEntry[0]);
@@ -230,7 +230,6 @@ function getTotalPages(characters) {
 
 // DOM Manipulation
 function renderCharacters(characters) {
-  // it would be easiest if right here is where we did the chunking and determined which page sub array to use
   const { currentPageIndex } = state;
 
   const paginatedCharacters = getPaginatedCharacters(characters);
