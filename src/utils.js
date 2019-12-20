@@ -31,6 +31,13 @@ export const compare = (a, b) => {
   return 0;
 }
 
+/**
+ * Creates an array of elements sorted based on the value of a specific property in each item of the original array.
+ * @param {array} data your original array
+ * @param {string} direction the sorting direction, 'ascending' or 'descending'
+ * @param {string} key the key to sort by
+ * @return {array}
+ */
 export const sortByKey = (data = [], direction = 'ascending', type, sortKey) => {
   let sortedData = data;
 
@@ -51,6 +58,13 @@ export const sortByKey = (data = [], direction = 'ascending', type, sortKey) => 
   return direction === 'descending' ? sortedData.reverse() : sortedData;
 }
 
+/**
+ * Creates an array of elements sorted based on the length of an array in each item of the original array.
+ * @param {array} data your original array
+ * @param {string} direction the sorting direction, 'ascending' or 'descending'
+ * @param {string} arrayKey the key of the array to sort by
+ * @return {array}
+ */
 export const sortByArrayLength = (data = [], direction = 'ascending', arrayKey) => {
   const sortedData = data.slice().sort((a, b) => compare(a[arrayKey].length, b[arrayKey].length));
 
