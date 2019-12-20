@@ -28,6 +28,8 @@ const completeData = {
 
 let state = { ...initialState };
 
+
+
 // Update Various Sections of State
 function setFilters(key, value) {
   state = {
@@ -89,6 +91,8 @@ function setCurrentPageIndex(pageIndex) {
   };
 }
 
+
+
 // Load Data Method
 function loadCharacterData() {
   Promise.all([
@@ -99,7 +103,7 @@ function loadCharacterData() {
     fetch('https://rickandmortyapi.com/api/character/?page=5')
   ]).then(responses => Promise.all(responses.map(response => response.json()))
   ).then(data => {
-    // combine all of the characters into one array
+    // combine all of the results into one array
     const allCharacters = data.flatMap(datum => datum.results);
     
     // set allCharacters in the initial state as a source of truth
@@ -150,6 +154,8 @@ function loadEpisodeData() {
   });  
 }
 
+
+
 // Filter Logic
 function getSortedAndFilteredCharacters(filters, characters) {
 
@@ -199,7 +205,6 @@ function getSortedAndFilteredCharacters(filters, characters) {
   // Sorting Logic
   const { sortOptions } = state;
 
-
   const { sortBy, sortDirection } = sortOptions;
 
   let sortedCharacters = filteredCharacters;
@@ -220,6 +225,8 @@ function getPaginatedCharacters(characters) { return chunk(characters, itemsPerP
 function getTotalPages(characters) {
   return characters.length ? Math.ceil(characters.length / itemsPerPage) : 0;
 }
+
+
 
 // DOM Manipulation
 function renderCharacters(characters) {
@@ -282,6 +289,8 @@ function renderEpisodesList(episodes) {
     .join('');
 }
 
+
+
 // Event Handlers
 function handleFilterChange(event) {
   const { name, value } = event.target;
@@ -331,6 +340,8 @@ function handlePageChange(event) {
   }
 }
 
+
+
 // Event Listeners
 const filterControlsElement = document.querySelector('.filter-form');
 
@@ -377,6 +388,8 @@ filterControlsElement.addEventListener(
 const paginationControlsElement = document.querySelector('.pagination-controls');
 
 paginationControlsElement.addEventListener('click', event => handlePageChange(event));
+
+
 
 // Initial Data Call
 loadCharacterData();
