@@ -1,4 +1,11 @@
-// https://youmightnotneed.com/lodash/
+/**
+ * Creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.
+ * via: https://youmightnotneed.com/lodash/
+ * @param {array} arr your original array
+ * @param {number} chunkSize how many items per group
+ * @param {array} cache the starting point for the output array, if unspecified it starts as an empty array
+ * @return {array}
+ */
 export const chunk = (arr, chunkSize = 1, cache = []) => {
   const tmp = [...arr]
   if (chunkSize <= 0) return cache
@@ -6,6 +13,12 @@ export const chunk = (arr, chunkSize = 1, cache = []) => {
   return cache
 }
 
+/**
+ * Compares values. Used in conjunction with Array.prototype.sort().
+ * @param {string|number} a
+ * @param {string|number} b
+ * @return {number}
+ */
 export const compare = (a, b) => {
   if (a < b) {
     return -1;
