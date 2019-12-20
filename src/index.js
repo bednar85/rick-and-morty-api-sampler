@@ -1,6 +1,11 @@
 import './styles.css';
 
-import { chunk, compare, sortByKey, sortByArrayLength } from './utils.js';
+import {
+  capitalize,
+  chunk,
+  sortByArrayLength,
+  sortByKey
+} from './utils.js';
 
 const itemsPerPage = 9;
 
@@ -238,18 +243,23 @@ function renderCharacters(characters) {
     document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">No characters match those filters.</div>';
   } else {
     document.querySelector('.character-cards').innerHTML = paginatedCharacters[currentPageIndex]
-      .map(datum => `
+      .map(datum => {
+        const statusValue = capitalize(datum.status);
+        const genderValue = capitalize(datum.gender);
+        const episdoeLabel = datum.episode.length > 1 ? `episodes` : `episode`;
+
+        return `
         <div class="character-card">    
           <img class="character-card-image" src="${datum.image}" width="160" height="160" />
           <h3 class="character-card-heading">${datum.name}</h3>
           <div class="character-card-body">
-            <p class="character-card-copy">Status: ${datum.status}</p>
-            <p class="character-card-copy">Gender: ${datum.gender}</p>
+            <p class="character-card-copy">Status: ${statusValue}</p>
+            <p class="character-card-copy">Gender: ${genderValue}</p>
             <p class="character-card-copy">Last Known Location: ${datum.location.name}</p>
-            <p class="character-card-copy">Appeared in ${datum.episode.length} episodes</p>
+            <p class="character-card-copy">Appeared in ${datum.episode.length} ${episdoeLabel}</p>
           </div>
         </div>
-      `)
+      `})
       .join('');
   }
 
