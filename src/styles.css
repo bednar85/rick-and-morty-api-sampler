@@ -62,7 +62,6 @@ p {
 .character-cards {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 
 .character-card {
