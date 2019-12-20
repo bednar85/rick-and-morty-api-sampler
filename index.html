@@ -5,79 +5,87 @@
   <meta charset="UTF-8" />
 </head>
 <body>
-  <h1 class="">Rick And Morty</h1>
-  <form class="filter-controls">
-    <fieldset class="filter-controls-fieldset">
-      <label for="name-input" class="filter-controls-input-label">Name:</label>
-      <input
-        id="name-input"
-        class="filter-controls-text-input"
-        name="name"
-        type="text"
-      />
-    </fieldset>
-    <fieldset class="filter-controls-fieldset">
-      <label for="status-select" class="filter-controls-input-label">Status:</label>
-      <select
-        name="status"
-        id="status-select"
-        class="filter-controls-select-input"
-      >
-        <option value="">Choose an option</option>
-        <option value="alive">Alive</option>
-        <option value="dead">Dead</option>
-        <option value="unknown">Unknown</option>
-      </select>
-    </fieldset>
-    <fieldset class="filter-controls-fieldset">
-      <label for="gender-select" class="filter-controls-input-label">Gender:</label>
-      <select
-        name="gender"
-        id="gender-select"
-        class="filter-controls-select-input"
-      >
-        <option value="">Choose an option</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-        <option value="unknown">Unknown</option>
-      </select>
-    </fieldset>
-  </form>
-  <form class="sort-controls">
-    <fieldset class="sort-controls-fieldset">
-      <label for="sort-by-input" class="sort-controls-input-label">Sort By:</label>
-      <select
-        name="sortBy"
-        id="sort-by-select"
-        class="sort-controls-select-input"
-      >
-        <option value="id">Id</option>
-        <option value="name">Name</option>
-        <option value="status">Status</option>
-        <option value="episodes">Episodes Appeared In</option>
-      </select>
-    </fieldset>
-    <fieldset class="sort-controls-fieldset">
-      <label for="sort-direction-select" class="sort-controls-input-label">Direction:</label>
-      <select
-        name="sortDirection"
-        id="sort-direction-select"
-        class="sort-controls-select-input"
-      >
-        <option value="ascending">Ascending (A-Z / 1-100)</option>
-        <option value="descending">Descending (Z-A / 100-1)</option>
-      </select>
-    </fieldset>
-  </form>
-  <div class="characters"></div>
-  <div class="pagination-controls">
-    <button class="pagination-controls-btn pagination-controls-btn--prev">
-      Prev
-    </button>
-    <p class="pagination-controls-pagination-status"></p>
-    <button class="pagination-controls-btn pagination-controls-btn--next">
-      Next
-    </button>
+  <div class="section">
+    <div class="section-header">
+      <h1 class="section-heading">Rick And Morty</h1>
+      <div class="control-forms">
+        <form class="filter-form">
+          <h2 class="filter-form-heading">Filters</h2>
+          <fieldset class="filter-form-fieldset">
+            <label for="name-input" class="filter-form-input-label">Name:</label>
+            <input
+              id="name-input"
+              class="filter-form-text-input"
+              name="name"
+              type="text"
+            />
+          </fieldset>
+          <fieldset class="filter-form-fieldset">
+            <label for="status-select" class="filter-form-input-label">Status:</label>
+            <select
+              name="status"
+              id="status-select"
+              class="filter-form-select-input"
+            >
+              <option value="">Choose an option</option>
+              <option value="alive">Alive</option>
+              <option value="dead">Dead</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </fieldset>
+          <fieldset class="filter-form-fieldset">
+            <label for="gender-select" class="filter-form-input-label">Gender:</label>
+            <select
+              name="gender"
+              id="gender-select"
+              class="filter-form-select-input"
+            >
+              <option value="">Choose an option</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="unknown">Unknown</option>
+            </select>
+          </fieldset>
+        </form>
+        <form class="sort-form">
+          <h2 class="sort-form-heading">Sorting</h2>
+          <fieldset class="sort-form-fieldset">
+            <label for="sort-by-input" class="sort-form-input-label">Sort By:</label>
+            <select
+              name="sortBy"
+              id="sort-by-select"
+              class="sort-form-select-input"
+            >
+              <option value="id">Id</option>
+              <option value="name">Name</option>
+              <option value="status">Status</option>
+              <option value="episodes">Episodes Appeared In</option>
+            </select>
+          </fieldset>
+          <fieldset class="sort-form-fieldset">
+            <label for="sort-direction-select" class="sort-form-input-label">Direction:</label>
+            <select
+              name="sortDirection"
+              id="sort-direction-select"
+              class="sort-form-select-input"
+            >
+              <option value="ascending">Ascending (A-Z / 1-100)</option>
+              <option value="descending">Descending (Z-A / 100-1)</option>
+            </select>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+    <div class="character-cards"></div>
+    <div class="pagination-controls">
+      <button class="pagination-controls-btn pagination-controls-btn--prev">
+        Prev
+      </button>
+      <p class="pagination-controls-pagination-status"></p>
+      <button class="pagination-controls-btn pagination-controls-btn--next">
+        Next
+      </button>
+    </div>
   </div>
   <div class="data-cards">
     <div class="data-card locations-card">

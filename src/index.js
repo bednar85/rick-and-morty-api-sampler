@@ -248,9 +248,9 @@ function renderCharacters(characters) {
   console.log('  paginatedResults:', paginatedResults);
 
   if (!paginatedCharacters.length) {
-    document.querySelector('.characters').innerHTML = '<div class="">No characters match those filters.</div>';
+    document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">No characters match those filters.</div>';
   } else {
-    document.querySelector('.characters').innerHTML = paginatedCharacters[currentPageIndex]
+    document.querySelector('.character-cards').innerHTML = paginatedCharacters[currentPageIndex]
       .map(datum => `
         <div class="character-card">    
           <img class="character-card-image" src="${datum.image}" width="160" height="160" />
@@ -279,7 +279,7 @@ function renderLocationsList(locations) {
   document.querySelector('.locations-card .data-card-list').innerHTML = locations
     .slice(0, 5)
     .map(datum => `
-      <li class="">    
+      <li class="data-card-list-item">    
         <div class="">Name: ${datum.name}</div>
         <div class="">Dimension: ${datum.dimension}</div>
         <div class="">Residents: ${datum.residents.length}</div>
@@ -292,10 +292,9 @@ function renderEpisodesList(episodes) {
   document.querySelector('.episodes-card .data-card-list').innerHTML = episodes
     .slice(0, 5)
     .map(datum => `
-      <li class="">    
-        <div class="">Name: ${datum.name}</div>
-        <div class="">Episode: ${datum.episode}</div>
-        <div class="">Residents: ${datum.characters.length}</div>
+      <li class="data-card-list-item">
+        <div class="">${datum.name} (${datum.episode})</div>
+        <div class="">${datum.characters.length} Characters</div>
       </li>
     `)
     .join('');
@@ -351,23 +350,23 @@ function handlePageChange(event) {
 }
 
 // Event Listeners
-const filterControlsElement = document.querySelector('.filter-controls');
+const filterControlsElement = document.querySelector('.filter-form');
 
 filterControlsElement.addEventListener(
   'change',
   event => {
-    if (event.target.matches('.filter-controls-select-input')) {
+    if (event.target.matches('.filter-form-select-input')) {
       handleFilterChange(event);
     }
   }
 );
 
-const sortControlsElement = document.querySelector('.sort-controls');
+const sortControlsElement = document.querySelector('.sort-form');
 
 sortControlsElement.addEventListener(
   'change',
   event => {
-    if (event.target.matches('.sort-controls-select-input')) {
+    if (event.target.matches('.sort-form-select-input')) {
       handleSortChange(event);
     }
   }
@@ -387,7 +386,7 @@ filterControlsElement.addEventListener(
 filterControlsElement.addEventListener(
   'keyup',
   event => {
-    if (event.target.matches('.filter-controls-text-input')) {
+    if (event.target.matches('.filter-form-text-input')) {
       handleFilterChange(event);
     }
   }

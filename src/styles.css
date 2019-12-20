@@ -18,21 +18,65 @@ p {
   margin-top: 0;
 }
 
-.characters {
-  flex-wrap: wrap;
+
+/* .section {} */
+
+.section-header {
+  padding: 20px;
+}
+
+.section-heading {
+  margin-bottom: 30px;
+}
+
+.control-forms {
   display: flex;
 }
 
+.filter-form,
+.sort-form {
+  flex-grow: 1;
+  width: 50%;
+}
+
+.filter-form-fieldset,
+.sort-form-fieldset {
+  border: none;
+  margin: 0;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+
+.filter-form-fieldset:last-child,
+.sort-form-fieldset:last-child {
+  margin-bottom: 0;
+}
+
+/* .filter-form {}
+.filter-form-fieldset {}
+.filter-form-input-label {}
+.filter-form-text-input {}
+
+.sort-form {}
+.sort-form-fieldset {}
+.sort-form-input-label {}
+.sort-form-select-input {} */
+
+
+.character-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .character-card {
-  /* border-radius: 20px; */
-  /* border: 1px solid #ccc; */
   border: 2px solid #96d0e4;
   box-shadow: 6px 6px #96d0e4;
-  flex-grow: 1;
-  margin: 1%;
+  margin: 1.5%;
   padding: 20px;
   text-align: center;
-  width: 25%;
+  width: 30%;
 }
 
 .character-card-image {
@@ -50,6 +94,10 @@ p {
 
 .character-card-copy {
   font-weight: 300;
+}
+
+.no-results-message {
+  padding: 20px;
 }
 
 .pagination-controls {
