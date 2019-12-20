@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
 </head>
 <body>
+  <h1 class="">Rick And Morty</h1>
   <form class="filter-controls">
     <fieldset class="filter-controls-fieldset">
       <label for="name-input" class="filter-controls-input-label">Name:</label>
@@ -71,15 +72,24 @@
   <div class="characters"></div>
   <div class="pagination-controls">
     <button class="pagination-controls-btn pagination-controls-btn--prev">
-      Previous
+      Prev
     </button>
     <p class="pagination-controls-pagination-status"></p>
     <button class="pagination-controls-btn pagination-controls-btn--next">
       Next
     </button>
   </div>
-  <div class="locations"></div>
-  <div class="episodes"></div>
+  <div class="data-cards">
+    <div class="data-card locations-card">
+      <h2 class="data-card-heading">Most Populated Locations</h2>
+      <ul class="data-card-list"></ul>
+    </div>
+    <div class="data-card episodes-card">
+      <h2 class="data-card-heading">Most Character Heavy Episodes</h2>
+      <ul class="data-card-list"></ul>
+    </div>
+  </div>
+  
   <script src="src/index.js"></script>
 </body>
 </html>

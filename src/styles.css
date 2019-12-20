@@ -1,3 +1,97 @@
-body {
-  font-family: sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+* {
+  box-sizing: border-box;
 }
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
+}
+
+.characters {
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.character-card {
+  /* border-radius: 20px; */
+  /* border: 1px solid #ccc; */
+  border: 2px solid #96d0e4;
+  box-shadow: 6px 6px #96d0e4;
+  flex-grow: 1;
+  margin: 1%;
+  padding: 20px;
+  text-align: center;
+  width: 25%;
+}
+
+.character-card-image {
+  border-radius: 80px;
+  margin-bottom: 20px;
+}
+
+/* .character-card-heading {} */
+
+.character-card-body {
+  margin: 0 auto;
+  text-align: left;
+  width: 66%;
+}
+
+.character-card-copy {
+  font-weight: 300;
+}
+
+.pagination-controls {
+  text-align: center;
+}
+
+.pagination-controls-btn {
+  background-color: #fe9438;
+  border: none;
+  color: #FB4300;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 15px;
+  padding: 10px 15px;
+  text-transform: uppercase;
+}
+
+.pagination-controls-btn:hover {
+  background-color: #fab143;
+}
+
+.pagination-controls-pagination-status {
+  display: inline-block;
+  font-size: 16px;
+}
+
+/* .pagination-controls-btn {} */
+
+.data-cards {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.data-card {
+  border: 2px solid #96d0e4;
+  box-shadow: 6px 6px #96d0e4;
+  margin: 1%;
+  padding: 20px;
+  width: 48%;
+  flex-grow: 1;
+}
+
+/* .data-card-heading {}
+.data-card-list {} */

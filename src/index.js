@@ -2,7 +2,7 @@ import './styles.css';
 
 import { chunk, compare, sortByKey, sortByArrayLength } from './utils.js';
 
-const itemsPerPage = 10;
+const itemsPerPage = 9;
 
 const initialState = {
   filters: {
@@ -252,16 +252,15 @@ function renderCharacters(characters) {
   } else {
     document.querySelector('.characters').innerHTML = paginatedCharacters[currentPageIndex]
       .map(datum => `
-        <div class="">    
-          <img class="" src="${datum.image}" width="160" height="160" />
-          <div class="">Id: ${datum.id}</div>
-          <div class="">Name: ${datum.name}</div>
-          <div class="">Status: ${datum.status}</div>
-          <div class="">Species: ${datum.species}</div>
-          <div class="">Gender: ${datum.gender}</div>
-          <div class="">Origin: ${datum.origin.name}</div>
-          <div class="">Location: ${datum.location.name}</div>
-          <div class="">Episode Count: ${datum.episode.length}</div>
+        <div class="character-card">    
+          <img class="character-card-image" src="${datum.image}" width="160" height="160" />
+          <h3 class="character-card-heading">${datum.name}</h3>
+          <div class="character-card-body">
+            <p class="character-card-copy">Status: ${datum.status}</p>
+            <p class="character-card-copy">Gender: ${datum.gender}</p>
+            <p class="character-card-copy">Last Known Location: ${datum.location.name}</p>
+            <p class="character-card-copy">Appeared in ${datum.episode.length} episodes</p>
+          </div>
         </div>
       `)
       .join('');
@@ -277,7 +276,7 @@ function updatePaginationMessaging(currentPageIndex, totalPages) {
 }
 
 function renderLocationsList(locations) {
-  document.querySelector('.locations-card-list').innerHTML = locations
+  document.querySelector('.locations-card .data-card-list').innerHTML = locations
     .slice(0, 5)
     .map(datum => `
       <li class="">    
@@ -290,7 +289,7 @@ function renderLocationsList(locations) {
 }
 
 function renderEpisodesList(episodes) {
-  document.querySelector('.episodes-card-list').innerHTML = episodes
+  document.querySelector('.episodes-card .data-card-list').innerHTML = episodes
     .slice(0, 5)
     .map(datum => `
       <li class="">    
