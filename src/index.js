@@ -47,6 +47,16 @@ function setFilters(key, value) {
   };
 }
 
+function resetFilters() {
+  state = {
+    ...state,
+    filters: {
+      ...initialState.filters
+    },
+    currentPageIndex: 0
+  };
+}
+
 function setSortOptions(key, value) {
   state = {
     ...state,
@@ -305,6 +315,14 @@ function handleFilterChange(event) {
   renderCharacters(filteredCharacters);
 }
 
+function handleResetFilters(event) {
+  const { allCharacters } = completeData;
+
+  resetFilters();
+  setCharacters(allCharacters);
+  renderCharacters(allCharacters);
+}
+
 function handleSortChange(event) {
   const { name, value } = event.target;
 
@@ -349,6 +367,10 @@ filterControlsElement.addEventListener(
   event => {
     if (event.target.matches('.filter-form-select-input')) {
       handleFilterChange(event);
+    }
+
+    if (event.target.matches('.filter-form-reset-filters-btn')) {
+      handleResetFilters();
     }
   }
 );
