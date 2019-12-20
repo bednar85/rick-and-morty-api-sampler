@@ -28,8 +28,19 @@ p {
 
 .section-heading {
   margin-bottom: 30px;
+  position: relative;
 }
 
+.section-heading::after {
+  background-color: #96d0e4;
+  content: '';
+  display: block;
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 60%;
+}
 
 
 /* Forms */
