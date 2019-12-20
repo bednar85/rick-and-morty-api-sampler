@@ -89,7 +89,11 @@ p {
 }
 
 .no-results-message {
+  border: 2px solid #96d0e4;
+  box-shadow: 6px 6px #96d0e4;
+  margin-bottom: 20px;
   padding: 20px;
+  width: 100%;
 }
 
 

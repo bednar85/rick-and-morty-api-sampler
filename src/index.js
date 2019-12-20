@@ -236,7 +236,7 @@ function renderCharacters() {
   const paginatedCharacters = getPaginatedCharacters(characters);
 
   if (!paginatedCharacters.length) {
-    document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">No characters match those filters.</div>';
+    document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">Sorry, there are no characters that match those filters.</div>';
   } else {
     document.querySelector('.character-cards').innerHTML = paginatedCharacters[currentPageIndex]
       .map(datum => {
