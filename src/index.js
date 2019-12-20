@@ -183,20 +183,16 @@ function getSortedAndFilteredCharacters(filters, characters) {
       const conditions = {};
 
       // check each condition
-      if (activeFilterKeys.includes('name')) {
-        const parsedResultName = result.name.toLowerCase();
-        const parsedFilterName = filters.name.toLowerCase().trim();
+      activeFilterKeys.forEach(currentFilterKey => {
+        const resultValue = result[currentFilterKey].toLowerCase();
+        const filterValue = filters[currentFilterKey].toLowerCase();
 
-        conditions.name = parsedResultName.includes(parsedFilterName);
-      }
-
-      if (activeFilterKeys.includes('status')) {
-        conditions.status = result.status.toLowerCase() === filters.status.toLowerCase();
-      }
-
-      if (activeFilterKeys.includes('gender')) {
-        conditions.gender = result.gender.toLowerCase() === filters.gender.toLowerCase();
-      }
+        if (currentFilterKey ==='name') {
+          conditions.name = resultValue.includes(filterValue.trim());
+        } else {
+          conditions[currentFilterKey] = resultValue === filterValue;
+        }
+      });
 
       return Object.values(conditions).every(currentValue => currentValue === true);    
     });
