@@ -79,16 +79,6 @@ function setEpisodes(episodes) {
   }
 }
 
-function resetFilters() {
-  state = {
-    ...state,
-    filters: {
-      ...initialState.filters
-    },
-    currentPageIndex: initialState.currentPageIndex
-  };
-}
-
 function setCurrentPageIndex(pageIndex) {
   state = {
     ...state,
