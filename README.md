@@ -9,3 +9,7 @@ For this endpoint, I am grabbing 5 pages worth of data and combining them togeth
 ## Locations and Episodes
 
 For these API endpoints, I am grabbing all of the data for each endpoint, combining it together like before, then sorting the results based on the most characters which appear in each location and episode. I am grabbing the first 5 from each and displaying it in a card.
+
+## To Run Locally
+
+Download the repository, then in the console run the following commands: `npm install` followed by `npm start`.
