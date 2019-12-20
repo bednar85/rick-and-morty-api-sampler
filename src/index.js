@@ -115,7 +115,7 @@ function loadCharacterData() {
     completeData.allCharacters = allCharacters;
 
     setCharacters(allCharacters);
-    renderCharacters(allCharacters);
+    renderCharacters();
   });  
 }
 
@@ -234,8 +234,8 @@ function getTotalPages(characters) {
 
 
 // DOM Manipulation
-function renderCharacters(characters) {
-  const { currentPageIndex } = state;
+function renderCharacters() {
+  const { characters, currentPageIndex } = state;
 
   const paginatedCharacters = getPaginatedCharacters(characters);
 
@@ -312,7 +312,7 @@ function handleFilterChange(event) {
   const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
 
   setCharacters(filteredCharacters);
-  renderCharacters(filteredCharacters);
+  renderCharacters();
 }
 
 function handleResetFilters(event) {
@@ -320,7 +320,7 @@ function handleResetFilters(event) {
 
   resetFilters();
   setCharacters(allCharacters);
-  renderCharacters(allCharacters);
+  renderCharacters();
 }
 
 function handleSortChange(event) {
@@ -334,7 +334,7 @@ function handleSortChange(event) {
   const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
 
   setCharacters(filteredCharacters);
-  renderCharacters(filteredCharacters);
+  renderCharacters();
 }
 
 function handlePageChange(event) {
@@ -353,7 +353,7 @@ function handlePageChange(event) {
   }
 
   if (goBack || goForward) {
-    renderCharacters(characters);
+    renderCharacters();
   }
 }
 
