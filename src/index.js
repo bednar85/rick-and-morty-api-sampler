@@ -90,6 +90,11 @@ function setCurrentPageIndex(pageIndex) {
 }
 
 // Load Data Method
+/**
+ * when using a series of fetches in a Promise.all
+ * another Promise.all with a .map is needed to collect the responses
+ * see StackOverflow for more info: https://stackoverflow.com/questions/31710768/how-can-i-fetch-an-array-of-urls-with-promise-all
+ */
 function loadCharacterData() {
   Promise.all([
     fetch('https://rickandmortyapi.com/api/character/?page=1'),
@@ -109,7 +114,7 @@ function loadCharacterData() {
       setCharacters(allCharacters);
       renderCharacters();
     })
-    .catch(error => console.log('Error:', error));
+    .catch(error => console.log('Error: ', error));
 }
 
 function loadLocationData() {
@@ -135,7 +140,8 @@ function loadLocationData() {
 
       setLocations(sortedLocations);
       renderLocationsList();
-    });
+    })
+    .catch(error => console.log('Error: ', error));
 }
 
 function loadEpisodeData() {
@@ -159,7 +165,8 @@ function loadEpisodeData() {
 
       setEpisodes(sortedEpisodes);
       renderEpisodesList();
-    });
+    })
+    .catch(error => console.log('Error: ', error));
 }
 
 // Filter Logic
@@ -174,9 +181,11 @@ function getSortedAndFilteredCharacters(filters, characters) {
   let filteredCharacters = completeData.allCharacters;
 
   if (filtersApplied) {
-    // convert filter object to an array of entries
-    // exclude key value pairs in which the value is an empty string
-    // map over the remaining key value pairs so it's an array of only the active filter keys
+    /**
+     * convert filter object to an array of entries
+     * exclude key value pairs in which the value is an empty string
+     * map over the remaining key value pairs so it's an array of only the active filter keys
+     */
     const activeFilterKeys = Object.entries(filters)
       .filter(currentEntry => currentEntry[1].trim() !== '')
       .map(currentEntry => currentEntry[0]);
