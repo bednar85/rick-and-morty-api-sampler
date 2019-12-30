@@ -11,14 +11,33 @@ class CharacterCards extends Component {
   constructor(props) {
     super(props);
 
+    this.setPaginatedCharacters = this.setPaginatedCharacters.bind(this);
+
     this.itemsPerPage = 9;
 
     this.state = {
-      currentPageIndex: 0
+      currentPageIndex: 0,
+      paginatedCharacters: chunk(props.allCharacters, this.itemsPerPage)
     };
   }
 
-  get filteredCharacters() {
+  componentDidUpdate(prevProps) {
+    // if the filters or sortOptions change, setPaginatedCharacters
+    if (
+      this.props.filters !== prevProps.filters ||
+      this.props.sortOptions !== prevProps.sortOptions
+    ) {
+      this.setPaginatedCharacters();
+    }
+  }
+
+  get totalPages() {
+    const { paginatedCharacters } = this.state;
+
+    return paginatedCharacters.length;
+  }
+
+  setPaginatedCharacters() {
     const { allCharacters, filters, sortOptions } = this.props;
 
     // Filter Logic
@@ -61,9 +80,15 @@ class CharacterCards extends Component {
       });
     }
 
-    // if filteredCharacters is empty, exit early and skip the sorting logic
+    // if filteredCharacters is empty
+    // set paginatedCharacters to an empty array
+    // and exit early (i.e. skip the sorting logic)
     if (!filteredCharacters.length) {
-      return filteredCharacters;
+      this.setState({
+        paginatedCharacters: []
+      });
+
+      return;
     }
 
     // Sorting Logic
@@ -93,27 +118,13 @@ class CharacterCards extends Component {
       );
     }
 
-    return sortedCharacters;
-  }
-
-  get paginatedCharacters() {
-    const filteredCharacters = this.filteredCharacters;
-    const paginatedCharacters = chunk(filteredCharacters, this.itemsPerPage);
-
-    console.log('');
-    console.log('CharacterCards - get paginatedCharacters');
-    console.log('  paginatedCharacters:', paginatedCharacters);
-
-    return paginatedCharacters;
+    this.setState({
+      paginatedCharacters: chunk(sortedCharacters, this.itemsPerPage)
+    });
   }
 
   get characterCards() {
-    const { currentPageIndex } = this.state;
-
-    // console.log('');
-    // console.log('paginatedCharacters:', paginatedCharacters);
-
-    const paginatedCharacters = this.paginatedCharacters;
+    const { currentPageIndex, paginatedCharacters } = this.state;
 
     if (!paginatedCharacters.length) {
       return (
@@ -150,13 +161,9 @@ class CharacterCards extends Component {
         );
       });
     }
-
-    // updatePaginationMessaging(currentPageIndex, paginatedCharacters.length);
   }
 
   render() {
-    // const { visible } = this.state;
-
     console.log('');
     console.log('CharacterCards - render');
     console.log('  this.props:', this.props);
