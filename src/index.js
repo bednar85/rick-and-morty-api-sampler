@@ -1,11 +1,6 @@
 import './styles.css';
 
-import {
-  capitalize,
-  chunk,
-  sortByArrayLength,
-  sortByKey
-} from './utils.js';
+import { capitalize, chunk, sortByArrayLength, sortByKey } from './utils.js';
 
 const itemsPerPage = 9;
 
@@ -32,8 +27,6 @@ const completeData = {
 };
 
 let state = { ...initialState };
-
-
 
 // Update Various Sections of State
 function setFilters(key, value) {
@@ -72,21 +65,21 @@ function setCharacters(characters) {
   state = {
     ...state,
     characters
-  }
+  };
 }
 
 function setLocations(locations) {
   state = {
     ...state,
     locations
-  }
+  };
 }
 
 function setEpisodes(episodes) {
   state = {
     ...state,
     episodes
-  }
+  };
 }
 
 function setCurrentPageIndex(pageIndex) {
@@ -96,8 +89,6 @@ function setCurrentPageIndex(pageIndex) {
   };
 }
 
-
-
 // Load Data Method
 function loadCharacterData() {
   Promise.all([
@@ -106,17 +97,19 @@ function loadCharacterData() {
     fetch('https://rickandmortyapi.com/api/character/?page=3'),
     fetch('https://rickandmortyapi.com/api/character/?page=4'),
     fetch('https://rickandmortyapi.com/api/character/?page=5')
-  ]).then(responses => Promise.all(responses.map(response => response.json()))
-  ).then(data => {
-    // combine all of the results into one array
-    const allCharacters = data.flatMap(datum => datum.results);
-    
-    // set allCharacters in the initial state as a source of truth
-    completeData.allCharacters = allCharacters;
+  ])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(data => {
+      // combine all of the results into one array
+      const allCharacters = data.flatMap(datum => datum.results);
 
-    setCharacters(allCharacters);
-    renderCharacters();
-  });  
+      // set allCharacters in the initial state as a source of truth
+      completeData.allCharacters = allCharacters;
+
+      setCharacters(allCharacters);
+      renderCharacters();
+    })
+    .catch(error => console.log('Error:', error));
 }
 
 function loadLocationData() {
@@ -125,52 +118,61 @@ function loadLocationData() {
     fetch('https://rickandmortyapi.com/api/location?page=2'),
     fetch('https://rickandmortyapi.com/api/location?page=3'),
     fetch('https://rickandmortyapi.com/api/location?page=4')
-  ]).then(responses => Promise.all(responses.map(response => response.json()))
-  ).then(data => {
-    // combine all of the results into one array
-    const allLocations = data.flatMap(datum => datum.results);
-    
-    // set allLocations in the initial state as a source of truth
-    completeData.allLocations = allLocations;
-    
-    const sortedLocations = sortByArrayLength(allLocations, 'descending', 'residents');
+  ])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(data => {
+      // combine all of the results into one array
+      const allLocations = data.flatMap(datum => datum.results);
 
-    setLocations(sortedLocations);
-    renderLocationsList();
-  });  
+      // set allLocations in the initial state as a source of truth
+      completeData.allLocations = allLocations;
+
+      const sortedLocations = sortByArrayLength(
+        allLocations,
+        'descending',
+        'residents'
+      );
+
+      setLocations(sortedLocations);
+      renderLocationsList();
+    });
 }
 
 function loadEpisodeData() {
   Promise.all([
     fetch('https://rickandmortyapi.com/api/episode?page=1'),
     fetch('https://rickandmortyapi.com/api/episode?page=2')
-  ]).then(responses => Promise.all(responses.map(response => response.json()))
-  ).then(data => {
-    // combine all of the results into one array
-    const allEpisodes = data.flatMap(datum => datum.results);
-    
-    // set allEpisodes in the initial state as a source of truth
-    completeData.allEpisodes = allEpisodes;
+  ])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(data => {
+      // combine all of the results into one array
+      const allEpisodes = data.flatMap(datum => datum.results);
 
-    const sortedEpisodes = sortByArrayLength(allEpisodes, 'descending', 'characters');
-    
-    setEpisodes(sortedEpisodes);
-    renderEpisodesList();
-  });  
+      // set allEpisodes in the initial state as a source of truth
+      completeData.allEpisodes = allEpisodes;
+
+      const sortedEpisodes = sortByArrayLength(
+        allEpisodes,
+        'descending',
+        'characters'
+      );
+
+      setEpisodes(sortedEpisodes);
+      renderEpisodesList();
+    });
 }
-
-
 
 // Filter Logic
 function getSortedAndFilteredCharacters(filters, characters) {
-
   // Filter Logic
   // filters are applied if any of the values in Object.values(filters) are set to something other than an empty string or only spaces
-  const filtersApplied = Object.values(filters).some(currentValue => currentValue.trim() !== '');
+  const filtersApplied = Object.values(filters).some(
+    currentValue => currentValue.trim() !== ''
+  );
 
   // start by setting filteredCharacters to the entire data set
   let filteredCharacters = completeData.allCharacters;
-  
+
   if (filtersApplied) {
     // convert filter object to an array of entries
     // exclude key value pairs in which the value is an empty string
@@ -187,14 +189,16 @@ function getSortedAndFilteredCharacters(filters, characters) {
         const resultValue = result[currentFilterKey].toLowerCase();
         const filterValue = filters[currentFilterKey].toLowerCase();
 
-        if (currentFilterKey ==='name') {
+        if (currentFilterKey === 'name') {
           conditions.name = resultValue.includes(filterValue.trim());
         } else {
           conditions[currentFilterKey] = resultValue === filterValue;
         }
       });
 
-      return Object.values(conditions).every(currentValue => currentValue === true);    
+      return Object.values(conditions).every(
+        currentValue => currentValue === true
+      );
     });
   }
 
@@ -211,23 +215,37 @@ function getSortedAndFilteredCharacters(filters, characters) {
   let sortedCharacters = filteredCharacters;
 
   if (sortBy === 'id') {
-    sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'numerical', sortBy);
+    sortedCharacters = sortByKey(
+      filteredCharacters,
+      sortDirection,
+      'numerical',
+      sortBy
+    );
   } else if (sortBy === 'episodes') {
-    sortedCharacters = sortByArrayLength(filteredCharacters, sortDirection, 'episode');
+    sortedCharacters = sortByArrayLength(
+      filteredCharacters,
+      sortDirection,
+      'episode'
+    );
   } else {
-    sortedCharacters = sortByKey(filteredCharacters, sortDirection, 'alphabetical', sortBy);
+    sortedCharacters = sortByKey(
+      filteredCharacters,
+      sortDirection,
+      'alphabetical',
+      sortBy
+    );
   }
 
   return sortedCharacters;
 }
 
-function getPaginatedCharacters(characters) { return chunk(characters, itemsPerPage); }
+function getPaginatedCharacters(characters) {
+  return chunk(characters, itemsPerPage);
+}
 
 function getTotalPages(characters) {
   return characters.length ? Math.ceil(characters.length / itemsPerPage) : 0;
 }
-
-
 
 // DOM Manipulation
 function renderCharacters() {
@@ -236,9 +254,12 @@ function renderCharacters() {
   const paginatedCharacters = getPaginatedCharacters(characters);
 
   if (!paginatedCharacters.length) {
-    document.querySelector('.character-cards').innerHTML = '<div class="no-results-message">Sorry, there are no characters that match those filters.</div>';
+    document.querySelector('.character-cards').innerHTML =
+      '<div class="no-results-message">Sorry, there are no characters that match those filters.</div>';
   } else {
-    document.querySelector('.character-cards').innerHTML = paginatedCharacters[currentPageIndex]
+    document.querySelector('.character-cards').innerHTML = paginatedCharacters[
+      currentPageIndex
+    ]
       .map(datum => {
         const statusValue = capitalize(datum.status);
         const genderValue = capitalize(datum.gender);
@@ -255,7 +276,8 @@ function renderCharacters() {
             <p class="character-card-copy">Appeared in ${datum.episode.length} ${episdoeLabel}</p>
           </div>
         </div>
-      `})
+      `;
+      })
       .join('');
   }
 
@@ -263,23 +285,30 @@ function renderCharacters() {
 }
 
 function updatePaginationMessaging(currentPageIndex, totalPages) {
-  const paginationMessaging = totalPages === 0 ? '' : `Page ${currentPageIndex + 1} of ${totalPages}`;
+  const paginationMessaging =
+    totalPages === 0 ? '' : `Page ${currentPageIndex + 1} of ${totalPages}`;
 
-  document.querySelector('.pagination-controls-pagination-status').innerHTML = paginationMessaging;
+  document.querySelector(
+    '.pagination-controls-pagination-status'
+  ).innerHTML = paginationMessaging;
 }
 
 function renderLocationsList() {
   const { locations } = state;
 
-  document.querySelector('.locations-card .data-card-list').innerHTML = locations
+  document.querySelector(
+    '.locations-card .data-card-list'
+  ).innerHTML = locations
     .slice(0, 5)
-    .map(datum => `
+    .map(
+      datum => `
       <li class="data-card-list-item">    
         <div class="data-card-list-item-heading">${datum.name}</div>
         <div class="data-card-list-item-subheading">located in the ${datum.dimension}</div>
         <div class="data-card-list-item-text">${datum.residents.length} residents</div>
       </li>
-    `)
+    `
+    )
     .join('');
 }
 
@@ -288,17 +317,17 @@ function renderEpisodesList() {
 
   document.querySelector('.episodes-card .data-card-list').innerHTML = episodes
     .slice(0, 5)
-    .map(datum => `
+    .map(
+      datum => `
       <li class="data-card-list-item">
         <div class="data-card-list-item-heading">${datum.name}</div>
         <div class="data-card-list-item-subheading">${datum.episode}</div>
         <div class="data-card-list-item-text">${datum.characters.length} characters</div>
       </li>
-    `)
+    `
+    )
     .join('');
 }
-
-
 
 // Event Handlers
 function handleFilterChange(event) {
@@ -308,8 +337,11 @@ function handleFilterChange(event) {
 
   const { allCharacters } = completeData;
   const { filters, characters } = state;
-  
-  const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
+
+  const filteredCharacters = getSortedAndFilteredCharacters(
+    filters,
+    allCharacters
+  );
 
   setCharacters(filteredCharacters);
   renderCharacters();
@@ -330,8 +362,11 @@ function handleSortChange(event) {
 
   const { allCharacters } = completeData;
   const { filters, characters } = state;
-  
-  const filteredCharacters = getSortedAndFilteredCharacters(filters, allCharacters);
+
+  const filteredCharacters = getSortedAndFilteredCharacters(
+    filters,
+    allCharacters
+  );
 
   setCharacters(filteredCharacters);
   renderCharacters();
@@ -343,8 +378,12 @@ function handlePageChange(event) {
 
   // if totalPages is greater than zero, set lastPageIndex to totalPages - 1
   const lastPageIndex = totalPages > 0 ? totalPages - 1 : 0;
-  const goBack = event.target.matches('.pagination-controls-btn--prev') && currentPageIndex > 0;
-  const goForward = event.target.matches('.pagination-controls-btn--next') && currentPageIndex < lastPageIndex;
+  const goBack =
+    event.target.matches('.pagination-controls-btn--prev') &&
+    currentPageIndex > 0;
+  const goForward =
+    event.target.matches('.pagination-controls-btn--next') &&
+    currentPageIndex < lastPageIndex;
 
   if (goBack) {
     setCurrentPageIndex(currentPageIndex - 1);
@@ -357,60 +396,48 @@ function handlePageChange(event) {
   }
 }
 
-
-
 // Event Listeners
 const filterControlsElement = document.querySelector('.filter-form');
 
-filterControlsElement.addEventListener(
-  'change',
-  event => {
-    if (event.target.matches('.filter-form-select-input')) {
-      handleFilterChange(event);
-    }
-
-    if (event.target.matches('.filter-form-reset-filters-btn')) {
-      handleResetFilters();
-    }
+filterControlsElement.addEventListener('change', event => {
+  if (event.target.matches('.filter-form-select-input')) {
+    handleFilterChange(event);
   }
-);
+
+  if (event.target.matches('.filter-form-reset-filters-btn')) {
+    handleResetFilters();
+  }
+});
 
 const sortControlsElement = document.querySelector('.sort-form');
 
-sortControlsElement.addEventListener(
-  'change',
-  event => {
-    if (event.target.matches('.sort-form-select-input')) {
-      handleSortChange(event);
-    }
+sortControlsElement.addEventListener('change', event => {
+  if (event.target.matches('.sort-form-select-input')) {
+    handleSortChange(event);
   }
-);
+});
 
 // prevent form submittal via the Enter key, it's clearing the text input
-filterControlsElement.addEventListener(
-  'keydown',
-  event => {
-    if (event.keyCode == 13) {
-      event.preventDefault();
-      return false;
-    }
+filterControlsElement.addEventListener('keydown', event => {
+  if (event.keyCode == 13) {
+    event.preventDefault();
+    return false;
   }
+});
+
+filterControlsElement.addEventListener('keyup', event => {
+  if (event.target.matches('.filter-form-text-input')) {
+    handleFilterChange(event);
+  }
+});
+
+const paginationControlsElement = document.querySelector(
+  '.pagination-controls'
 );
 
-filterControlsElement.addEventListener(
-  'keyup',
-  event => {
-    if (event.target.matches('.filter-form-text-input')) {
-      handleFilterChange(event);
-    }
-  }
+paginationControlsElement.addEventListener('click', event =>
+  handlePageChange(event)
 );
-
-const paginationControlsElement = document.querySelector('.pagination-controls');
-
-paginationControlsElement.addEventListener('click', event => handlePageChange(event));
-
-
 
 // Initial Data Call
 loadCharacterData();
