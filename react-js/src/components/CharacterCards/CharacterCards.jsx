@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import {
   capitalize,
@@ -11,6 +11,7 @@ class CharacterCards extends Component {
   constructor(props) {
     super(props);
 
+    this.handlePageChange = this.handlePageChange.bind(this);
     this.setPaginatedCharacters = this.setPaginatedCharacters.bind(this);
 
     this.itemsPerPage = 9;
@@ -35,6 +36,36 @@ class CharacterCards extends Component {
     const { paginatedCharacters } = this.state;
 
     return paginatedCharacters.length;
+  }
+
+  handlePageChange(event) {
+    const { currentPageIndex } = this.state;
+
+    const totalPages = this.totalPages;
+
+    // if totalPages is greater than zero, set lastPageIndex to totalPages - 1
+    const lastPageIndex = totalPages > 0 ? totalPages - 1 : 0;
+
+    const goForward =
+      event.target.matches('.pagination-controls-btn--next') &&
+      currentPageIndex < lastPageIndex;
+    const goBack =
+      event.target.matches('.pagination-controls-btn--prev') &&
+      currentPageIndex > 0;
+
+    if (goForward || goBack) {
+      let newPageIndex = currentPageIndex;
+
+      if (goForward) {
+        newPageIndex = currentPageIndex + 1;
+      } else if (goBack) {
+        newPageIndex = currentPageIndex - 1;
+      }
+
+      this.setState({
+        currentPageIndex: newPageIndex
+      });
+    }
   }
 
   setPaginatedCharacters() {
@@ -80,9 +111,11 @@ class CharacterCards extends Component {
       });
     }
 
-    // if filteredCharacters is empty
-    // set paginatedCharacters to an empty array
-    // and exit early (i.e. skip the sorting logic)
+    /**
+     * if filteredCharacters is empty
+     * set paginatedCharacters to an empty array
+     * and exit early (i.e. skip the sorting logic)
+     */
     if (!filteredCharacters.length) {
       this.setState({
         paginatedCharacters: []
@@ -169,7 +202,26 @@ class CharacterCards extends Component {
     console.log('  this.props:', this.props);
     console.log('  this.state:', this.state);
 
-    return <div className="">{this.characterCards}</div>;
+    return (
+      <Fragment>
+        <div className="">{this.characterCards}</div>
+        <div className="pagination-controls">
+          <button
+            className="pagination-controls-btn pagination-controls-btn--prev"
+            onClick={this.handlePageChange}
+          >
+            Prev
+          </button>
+          <p className="pagination-controls-pagination-status"></p>
+          <button
+            className="pagination-controls-btn pagination-controls-btn--next"
+            onClick={this.handlePageChange}
+          >
+            Next
+          </button>
+        </div>
+      </Fragment>
+    );
   }
 }
 
