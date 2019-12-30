@@ -1,24 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import CharacterCards from './components/CharacterCards/CharacterCards';
+
 function App() {
+  const filters = {
+    name: '',
+    status: '',
+    gender: ''
+  };
+
+  const sortOptions = {
+    sortBy: 'id',
+    sortDirection: 'ascending'
+  };
+
+  const characterCardsProps = {
+    filters,
+    sortOptions
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CharacterCards {...characterCardsProps} />
     </div>
   );
 }
