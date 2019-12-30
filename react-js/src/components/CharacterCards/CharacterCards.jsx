@@ -11,50 +11,15 @@ class CharacterCards extends Component {
   constructor(props) {
     super(props);
 
-    this.loadCharacterData = this.loadCharacterData.bind(this);
-    this.filterCharacters = this.filterCharacters.bind(this);
-
     this.itemsPerPage = 9;
 
     this.state = {
-      currentPageIndex: 0,
-      allCharacters: [],
-      characters: []
+      currentPageIndex: 0
     };
   }
 
-  componentDidMount() {
-    this.loadCharacterData();
-  }
-
-  loadCharacterData() {
-    Promise.all([
-      fetch('https://rickandmortyapi.com/api/character/?page=1'),
-      fetch('https://rickandmortyapi.com/api/character/?page=2'),
-      fetch('https://rickandmortyapi.com/api/character/?page=3'),
-      fetch('https://rickandmortyapi.com/api/character/?page=4'),
-      fetch('https://rickandmortyapi.com/api/character/?page=5')
-    ])
-      .then(responses =>
-        Promise.all(responses.map(response => response.json()))
-      )
-      .then(data => {
-        // combine all of the results into one array
-        const allCharacters = data.flatMap(datum => datum.results);
-
-        const filteredCharacters = this.filterCharacters();
-
-        // set allCharacters in the initial state as a source of truth
-        this.setState({
-          allCharacters,
-          characters: filteredCharacters
-        });
-      });
-  }
-
-  filterCharacters() {
-    const { filters, sortOptions } = this.props;
-    const { allCharacters, characters } = this.state;
+  get filteredCharacters() {
+    const { allCharacters, filters, sortOptions } = this.props;
 
     // Filter Logic
     // filters are applied if any of the values in Object.values(filters) are set to something other than an empty string or only spaces
@@ -66,14 +31,16 @@ class CharacterCards extends Component {
     let filteredCharacters = allCharacters;
 
     if (filtersApplied) {
-      // convert filter object to an array of entries
-      // exclude key value pairs in which the value is an empty string
-      // map over the remaining key value pairs so it's an array of only the active filter keys
+      /**
+       * convert filter object to an array of entries
+       * exclude key value pairs in which the value is an empty string
+       * map over the remaining key value pairs so it's an array of only the active filter keys
+       */
       const activeFilterKeys = Object.entries(filters)
         .filter(currentEntry => currentEntry[1].trim() !== '')
         .map(currentEntry => currentEntry[0]);
 
-      filteredCharacters = characters.filter(result => {
+      filteredCharacters = allCharacters.filter(result => {
         const conditions = {};
 
         // check each condition
@@ -96,11 +63,7 @@ class CharacterCards extends Component {
 
     // if filteredCharacters is empty, exit early and skip the sorting logic
     if (!filteredCharacters.length) {
-      this.setState({
-        characters: filteredCharacters
-      });
-
-      return;
+      return filteredCharacters;
     }
 
     // Sorting Logic
@@ -130,44 +93,75 @@ class CharacterCards extends Component {
       );
     }
 
-    this.setState({
-      characters: sortedCharacters
-    });
+    return sortedCharacters;
+  }
+
+  get paginatedCharacters() {
+    const filteredCharacters = this.filteredCharacters;
+    const paginatedCharacters = chunk(filteredCharacters, this.itemsPerPage);
+
+    console.log('');
+    console.log('CharacterCards - get paginatedCharacters');
+    console.log('  paginatedCharacters:', paginatedCharacters);
+
+    return paginatedCharacters;
   }
 
   get characterCards() {
-    const { allCharacters } = this.state;
+    const { currentPageIndex } = this.state;
 
-    return allCharacters.map(datum => {
-      const statusValue = capitalize(datum.status);
-      const genderValue = capitalize(datum.gender);
-      const episodeLabel = datum.episode.length > 1 ? `episodes` : `episode`;
+    // console.log('');
+    // console.log('paginatedCharacters:', paginatedCharacters);
 
+    const paginatedCharacters = this.paginatedCharacters;
+
+    if (!paginatedCharacters.length) {
       return (
-        <div className="character-card" key={datum.id}>
-          <img
-            className="character-card-image"
-            src={datum.image}
-            width="160"
-            height="160"
-          />
-          <h3 className="character-card-heading">{datum.name}</h3>
-          <div className="character-card-body">
-            <p className="character-card-copy">Status: {statusValue}</p>
-            <p className="character-card-copy">Gender: {genderValue}</p>
-            <p className="character-card-copy">
-              Last Known Location: {datum.location.name}
-            </p>
-            <p className="character-card-copy">
-              Appeared in {datum.episode.length} {episodeLabel}
-            </p>
-          </div>
+        <div className="no-results-message">
+          Sorry, there are no characters that match those filters.
         </div>
       );
-    });
+    } else {
+      return paginatedCharacters[currentPageIndex].map(datum => {
+        const statusValue = capitalize(datum.status);
+        const genderValue = capitalize(datum.gender);
+        const episodeLabel = datum.episode.length > 1 ? `episodes` : `episode`;
+
+        return (
+          <div className="character-card" key={datum.id}>
+            <img
+              className="character-card-image"
+              src={datum.image}
+              width="160"
+              height="160"
+            />
+            <h3 className="character-card-heading">{datum.name}</h3>
+            <div className="character-card-body">
+              <p className="character-card-copy">Status: {statusValue}</p>
+              <p className="character-card-copy">Gender: {genderValue}</p>
+              <p className="character-card-copy">
+                Last Known Location: {datum.location.name}
+              </p>
+              <p className="character-card-copy">
+                Appeared in {datum.episode.length} {episodeLabel}
+              </p>
+            </div>
+          </div>
+        );
+      });
+    }
+
+    // updatePaginationMessaging(currentPageIndex, paginatedCharacters.length);
   }
 
   render() {
+    // const { visible } = this.state;
+
+    console.log('');
+    console.log('CharacterCards - render');
+    console.log('  this.props:', this.props);
+    console.log('  this.state:', this.state);
+
     return <div className="">{this.characterCards}</div>;
   }
 }
